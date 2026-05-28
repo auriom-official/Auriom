@@ -1,0 +1,191 @@
+/* Shared styles for all info/legal pages */
+.info-page {
+  padding: 100px 0 var(--space-section);
+  min-height: 80vh;
+}
+
+.info-hero {
+  background: linear-gradient(135deg, #111111 0%, #2d2d2d 100%);
+  color: #FFFFFF;
+  padding: 60px 0;
+  margin-bottom: var(--space-section);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.info-hero-label {
+  display: inline-block;
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: var(--space-md);
+}
+
+.info-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  color: #FFFFFF;
+  margin-bottom: var(--space-md);
+  line-height: 1.1;
+}
+
+.info-hero p {
+  color: rgba(255,255,255,0.65);
+  font-size: var(--font-size-md);
+  max-width: 600px;
+}
+
+.info-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.info-section {
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border-color);
+}
+.info-section:last-child { border-bottom: none; }
+
+.info-section h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.info-section h3 {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.info-section p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+}
+
+.info-section ul, .info-section ol {
+  list-style: disc;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: var(--space-md);
+}
+
+.info-section ul li, .info-section ol li {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+}
+
+.info-section strong {
+  color: var(--text-primary);
+}
+
+.info-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.info-card h3 {
+  margin-top: 0 !important;
+  font-size: var(--font-size-md);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.info-card p {
+  margin: 0 !important;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.info-contact-block {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  text-align: center;
+}
+
+.info-contact-block .icon {
+  font-size: 32px;
+  margin-bottom: var(--space-sm);
+}
+
+.info-contact-block h4 {
+  font-weight: 800;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.info-contact-block p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  margin: 0 !important;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .info-hero { padding: 40px 0; }
+  .info-grid { grid-template-columns: 1fr; }
+}

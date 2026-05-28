@@ -1,0 +1,114 @@
+.reviews-section { background: var(--bg-secondary); }
+
+.reviews-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xl);
+  font-size: var(--font-size-md);
+}
+
+.reviews-slider-container {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.review-card.slider-mode {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.review-stars {
+  color: var(--primary-purple); /* Assuming black */
+  font-size: 24px;
+  margin-bottom: var(--space-md);
+  letter-spacing: 4px;
+}
+
+.review-text {
+  color: var(--text-primary);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: auto;
+}
+
+.review-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--primary-purple);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.review-name {
+  font-weight: 800;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  margin: 0;
+  text-align: left;
+}
+
+.review-product {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  text-align: left;
+}
+
+.slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.slider-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.slider-btn:hover {
+  background: var(--primary-purple);
+  color: #fff;
+  border-color: var(--primary-purple);
+}
+
+.slider-indicator {
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}

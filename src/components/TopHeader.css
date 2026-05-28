@@ -1,0 +1,29 @@
+.top-header {
+  background-color: var(--bg-pure);
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 6px var(--space-md);
+  font-size: 11px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1001; /* Above header */
+}
+
+.top-header p {
+  margin: 0;
+}
+
+.top-header strong {
+  color: var(--text-primary);
+}
+
+.top-header a {
+  color: var(--primary-purple);
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.top-header a:hover {
+  color: var(--accent-teal);
+}
