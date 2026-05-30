@@ -82,7 +82,7 @@ const PrivacyPolicy = () => (
           <li><strong>Opt-out:</strong> Unsubscribe from marketing emails via the link in any email.</li>
           <li><strong>Data Portability:</strong> Request your data in a machine-readable format.</li>
         </ul>
-        <p>To exercise any of these rights, email us at <strong>privacy@auriom.com</strong>.</p>
+        <p>To exercise any of these rights, email us at <strong>support@auriom.in</strong>.</p>
       </div>
 
       <div className="info-section">

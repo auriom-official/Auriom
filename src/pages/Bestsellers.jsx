@@ -1,30 +1,68 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useData } from '../context/DataContext';
-import './BestSellers.css';
+import './Bestsellers.css';
 
-const BestSellers = () => {
+// Seeded random shuffle
+function seededShuffle(array, seed) {
+  let m = array.length, t, i;
+  let copy = [...array];
+  
+  const random = () => {
+    let x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+  };
+  
+  while (m) {
+    i = Math.floor(random() * m--);
+    t = copy[m];
+    copy[m] = copy[i];
+    copy[i] = t;
+  }
+  return copy;
+}
+
+const Bestsellers = () => {
+  const { products, loading } = useData();
   const { addToCart } = useCart();
-  const { products } = useData();
 
-  // Show only bestsellers tagged items on homepage, or limit to top 6
-  const filtered = products.filter(p => p.tag && p.tag.toLowerCase().includes('best seller')).slice(0, 6);
-  // If we don't have enough tagged products, just show some default ones
-  const displayProducts = filtered.length >= 3 ? filtered : products.slice(0, 6);
+  const shuffledBestsellers = useMemo(() => {
+    if (!products) return [];
+    
+    // Filter for bestsellers (either tags array contains "Best Seller" or fallback to tag string)
+    let bestsellers = products.filter(p => {
+      if (p.tags && Array.isArray(p.tags) && p.tags.some(t => t.toLowerCase() === 'best seller')) return true;
+      return p.tag && p.tag.toLowerCase().includes('best seller');
+    });
+    if (bestsellers.length < 4) {
+      bestsellers = products.slice(0, 12); // fallback
+    }
+
+    // Calculate seed based on current 6-hour window
+    const currentWindow = Math.floor(Date.now() / (1000 * 60 * 60 * 6));
+    
+    return seededShuffle(bestsellers, currentWindow);
+  }, [products]);
+
+  if (loading) {
+    return <div style={{paddingTop: '100px', textAlign: 'center'}}>Loading Bestsellers...</div>;
+  }
 
   return (
-    <section className="bestsellers-section py-section" id="bestsellers">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title">Sale <span style={{ textDecoration: 'underline', color: 'var(--text-primary)' }}>Is Live</span></h2>
-          <Link to="/shop" className="view-all">View All Options →</Link>
+    <main className="bestsellers-page apple-transition">
+      <div className="bestsellers-hero">
+        <div className="container">
+          <span className="info-hero-label">Top Rated & Most Loved</span>
+          <h1>Our Bestsellers</h1>
+          <p>Discover our most popular smart gadgets. The lineup refreshes every 6 hours to surface the hottest deals!</p>
         </div>
-
-        {/* 3-row Product Grid */}
+      </div>
+      
+      <div className="container py-section">
         <div className="products-grid">
-          {displayProducts.map(product => (
+          {shuffledBestsellers.map(product => (
             <Link to={`/product/${product.id}`} className="product-card" key={product.id}>
               {product.tag && <div className="product-tag">{product.tag}</div>}
               <div className="product-playback">{product.playback}</div>
@@ -57,8 +95,8 @@ const BestSellers = () => {
           ))}
         </div>
       </div>
-    </section>
+    </main>
   );
 };
 
-export default BestSellers;
+export default Bestsellers;

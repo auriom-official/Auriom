@@ -1,26 +1,34 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
-import products from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useData } from '../context/DataContext';
 import './Shop.css';
 
-const allCategories = ['All', ...new Set(products.map(p => p.category))];
 const sortOptions = ['Popular', 'Price: Low to High', 'Price: High to Low', 'Newest'];
 
 const Shop = () => {
+  const { products, loading } = useData();
   const [searchParams] = useSearchParams();
   const initialCat = searchParams.get('category') || 'All';
   const [category, setCategory] = useState(initialCat);
   const [sort, setSort] = useState('Popular');
   const { addToCart } = useCart();
 
+  const allCategories = useMemo(() => {
+    return ['All', ...new Set(products.map(p => p.category))];
+  }, [products]);
+
   const filtered = useMemo(() => {
     let list = category === 'All' ? [...products] : products.filter(p => p.category === category);
-    if (sort === 'Price: Low to High') list.sort((a, b) => a.price - b.price);
-    if (sort === 'Price: High to Low') list.sort((a, b) => b.price - a.price);
+    if (sort === 'Price: Low to High') list.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    if (sort === 'Price: High to Low') list.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
     return list;
-  }, [category, sort]);
+  }, [products, category, sort]);
+
+  if (loading) {
+    return <div style={{paddingTop: '100px', textAlign: 'center'}}>Loading Shop...</div>;
+  }
 
   return (
     <main className="shop-page apple-transition">
@@ -67,12 +75,12 @@ const Shop = () => {
               <div className="product-info">
                 <h3 className="product-title">{product.name}</h3>
                 <div className="product-rating">
-                  <span className="star">★</span> {product.rating} | {product.reviews.toLocaleString()}
+                  <span className="star">★</span> {product.rating ?? 0} | {(product.reviews ?? 0).toLocaleString()}
                 </div>
                 <div className="product-price-row">
-                  <span className="price">₹{product.price.toLocaleString()}</span>
-                  <span className="original-price">₹{product.originalPrice.toLocaleString()}</span>
-                  <span className="discount">{product.discount}% off</span>
+                  <span className="price">₹{(product.price ?? 0).toLocaleString()}</span>
+                  <span className="original-price">₹{(product.originalPrice ?? 0).toLocaleString()}</span>
+                  <span className="discount">{product.discount ?? 0}% off</span>
                 </div>
               </div>
             </Link>

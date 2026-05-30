@@ -67,7 +67,7 @@ const ServiceCenters = () => (
         <div className="info-grid">
           {[
             {icon:'📞', title:'Book Pickup', val:'Call 1800-123-AURIOM'},
-            {icon:'📧', title:'Email Us', val:'service@auriom.com'},
+            {icon:'📧', title:'Email Us', val:'support@auriom.in'},
             {icon:'💬', title:'WhatsApp', val:'+91 98765 43210'},
           ].map(c => (
             <div className="info-contact-block" key={c.title}>

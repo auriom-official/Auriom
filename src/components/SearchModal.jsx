@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-import products from '../data/products';
+import { useData } from '../context/DataContext';
 import './SearchModal.css';
 
 const SearchModal = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
+  const { products } = useData();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const SearchModal = ({ isOpen, onClose }) => {
                   <img src={p.img} alt={p.name} className="search-result-img" />
                   <div>
                     <p className="search-result-name">{p.name}</p>
-                    <p className="search-result-price">₹{p.price.toLocaleString()} <span className="search-result-discount">{p.discount}% off</span></p>
+                    <p className="search-result-price">₹{(p.price ?? 0).toLocaleString()} <span className="search-result-discount">{p.discount ?? 0}% off</span></p>
                   </div>
                 </Link>
               ))

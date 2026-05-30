@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auriom Advanced Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+    <!-- Auth Guard: redirect to login if not authenticated -->
+    <script>
+        if (localStorage.getItem('auriom_admin_logged_in') !== 'true') {
+            window.location.replace('login.html');
+        }
+    </script>
+
+    <div class="admin-container" id="adminContainer">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>AURIOM</h2>
+                <span class="badge">ADMIN</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard"><ion-icon name="grid-outline"></ion-icon> Dashboard</li>
+                <li data-target="sales"><ion-icon name="trending-up-outline"></ion-icon> Sales Analytics</li>
+                <li data-target="users"><ion-icon name="people-outline"></ion-icon> Users</li>
+                <li data-target="products"><ion-icon name="cube-outline"></ion-icon> Products</li>
+                <li data-target="categories"><ion-icon name="list-outline"></ion-icon> Categories</li>
+                <li data-target="tags"><ion-icon name="pricetag-outline"></ion-icon> Tags</li>
+                <li data-target="banners"><ion-icon name="images-outline"></ion-icon> Banners</li>
+                <li data-target="orders"><ion-icon name="cart-outline"></ion-icon> Orders</li>
+                <li data-target="payment"><ion-icon name="card-outline"></ion-icon> Payments</li>
+                <li data-target="coupons"><ion-icon name="ticket-outline"></ion-icon> Coupons</li>
+                <li data-target="settings"><ion-icon name="settings-outline"></ion-icon> Settings</li>
+            </ul>
+            <div class="sidebar-footer">
+                <p><ion-icon name="mail-outline"></ion-icon> support@auriom.in</p>
+                <p style="margin-top: 12px;"><button class="btn btn-danger" style="padding: 6px 16px; font-size: 12px; width: 100%;" onclick="adminLogout()">Logout</button></p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <div class="search-bar">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" placeholder="Search anything...">
+                </div>
+                <div class="nav-profile">
+                    <button class="icon-btn"><ion-icon name="notifications-outline"></ion-icon></button>
+                    <div class="profile-pic">
+                        <img id="adminAvatar" src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin">
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dynamic Views -->
+            <div class="view-container">
+                <!-- Dashboard View -->
+                <section id="dashboard" class="view active">
+                    <div class="header-action">
+                        <h2>Dashboard Overview</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><ion-icon name="people"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Total Users</h3>
+                                <h2 id="statTotalUsers">0</h2>
+                                <p class="positive">Live from DB</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><ion-icon name="cube"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Products</h3>
+                                <h2 id="statTotalProducts">0</h2>
+                                <p class="positive">Live from DB</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><ion-icon name="cart"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Orders</h3>
+                                <h2 id="statTotalOrders">0</h2>
+                                <p class="positive">Live from DB</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><ion-icon name="wallet"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Revenue</h3>
+                                <h2 id="statRevenue">₹0</h2>
+                                <p class="positive">Live from DB</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h3>Revenue Overview</h3>
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Order Status</h3>
+                            <canvas id="orderStatusChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sales Analytics View -->
+                <section id="sales" class="view">
+                    <div class="header-action">
+                        <h2>Sales Analytics</h2>
+                    </div>
+                    <div class="charts-grid single-col">
+                        <div class="chart-container">
+                            <h3>Advanced Sales Comparison (This Year vs Last Year)</h3>
+                            <canvas id="salesComparisonChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h3>Sales by Category</h3>
+                            <canvas id="categorySalesChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Top Selling Products</h3>
+                            <canvas id="topProductsChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payment View -->
+                <section id="payment" class="view">
+                    <div class="header-action">
+                        <h2>Payments & Settlements</h2>
+                        <div class="section-search">
+                            <ion-icon name="search-outline"></ion-icon>
+                            <input type="text" id="searchPayments" placeholder="Search by TXN ID, Order ID..." oninput="renderPayments(this.value)">
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><ion-icon name="checkmark-circle"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Successful Payments</h3>
+                                <h2 id="statSuccessPayments">₹0</h2>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><ion-icon name="time"></ion-icon></div>
+                            <div class="stat-info">
+                                <h3>Pending Settlements</h3>
+                                <h2 id="statPendingPayments">₹0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Order ID</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Coupons View -->
+                <section id="coupons" class="view">
+                    <div class="header-action">
+                        <h2>Coupon Management</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchCoupons" placeholder="Search coupon code..." oninput="renderCoupons(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddCoupon()"><ion-icon name="add-outline"></ion-icon> Add Coupon</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Discount</th>
+                                    <th>Expiry Date</th>
+                                    <th>Usage Limit</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="couponsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Users View -->
+                <section id="users" class="view">
+                    <div class="header-action">
+                        <h2>Users Management</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchUsers" placeholder="Search name, email, phone..." oninput="renderUsers(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('userModal')"><ion-icon name="add-outline"></ion-icon> Add User</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Admin</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Products View -->
+                <section id="products" class="view">
+                    <div class="header-action">
+                        <h2>Products Management</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchProducts" placeholder="Search product name, category..." oninput="renderProducts(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddProduct()"><ion-icon name="add-outline"></ion-icon> Add Product</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Thumbnail</th>
+                                    <th>Name & Info</th>
+                                    <th>Prices (Old/New)</th>
+                                    <th>Discount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Categories View -->
+                <section id="categories" class="view">
+                    <div class="header-action">
+                        <h2>Categories (Drag to Reorder)</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchCategories" placeholder="Search category..." oninput="renderCategories(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddCategory()"><ion-icon name="add-outline"></ion-icon> Add Category</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Image</th>
+                                    <th>Category Name</th>
+                                    <th>Total Products</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTableBody">
+                                <!-- Populated by JS & SortableJS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tags View -->
+                <section id="tags" class="view">
+                    <div class="header-action">
+                        <h2>Tags Management</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchTags" placeholder="Search tag..." oninput="renderTags(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddTag()"><ion-icon name="add-outline"></ion-icon> Add Tag</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tag Name</th>
+                                    <th>Products Using</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tagsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Banners View -->
+                <section id="banners" class="view">
+                    <div class="header-action">
+                        <h2>Homepage Banners</h2>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchBanners" placeholder="Search banners..." oninput="renderBanners(this.value)">
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddBanner()"><ion-icon name="add-outline"></ion-icon> Add Banner</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Preview</th>
+                                    <th>Linked Category</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bannersTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Orders View -->
+                <section id="orders" class="view">
+                    <div class="header-action">
+                        <h2>Orders</h2>
+                        <div class="section-search">
+                            <ion-icon name="search-outline"></ion-icon>
+                            <input type="text" id="searchOrders" placeholder="Search order ID, customer..." oninput="renderOrders(this.value)">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Settings View -->
+                <section id="settings" class="view">
+                    <div class="header-action">
+                        <h2>Settings</h2>
+                    </div>
+                    <div class="settings-card">
+                        <h3>General Settings</h3>
+                        <form class="form">
+                            <div class="form-group">
+                                <label>Support Email</label>
+                                <input type="email" value="support@auriom.in" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Business Address</label>
+                                <input type="text" value="Doomdooma Tinsukia Assam 786151" disabled>
+                            </div>
+                            <button type="button" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Product Modal (Expanded with multi-image + tags) -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Add Product</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('productModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addProductForm">
+                <input type="hidden" id="editProductId" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Thumbnail Image URL (Required)</label>
+                        <input type="text" id="pf_img" placeholder="https://..." required>
+                        <div class="upload-wrapper" style="margin-top: 6px;">
+                            <input type="file" id="pf_img_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'pf_img')">
+                            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('pf_img_file').click()">
+                                <ion-icon name="cloud-upload-outline" style="margin-right:4px;"></ion-icon>Upload
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Image 2 URL (Required)</label>
+                        <input type="text" id="pf_img2" placeholder="https://..." required>
+                        <div class="upload-wrapper" style="margin-top: 6px;">
+                            <input type="file" id="pf_img2_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'pf_img2')">
+                            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('pf_img2_file').click()">
+                                <ion-icon name="cloud-upload-outline" style="margin-right:4px;"></ion-icon>Upload
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Image 3 URL (Optional)</label>
+                        <input type="text" id="pf_img3" placeholder="https://...">
+                        <div class="upload-wrapper" style="margin-top: 6px;">
+                            <input type="file" id="pf_img3_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'pf_img3')">
+                            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('pf_img3_file').click()">
+                                <ion-icon name="cloud-upload-outline" style="margin-right:4px;"></ion-icon>Upload
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Image 4 URL (Optional)</label>
+                        <input type="text" id="pf_img4" placeholder="https://...">
+                        <div class="upload-wrapper" style="margin-top: 6px;">
+                            <input type="file" id="pf_img4_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'pf_img4')">
+                            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('pf_img4_file').click()">
+                                <ion-icon name="cloud-upload-outline" style="margin-right:4px;"></ion-icon>Upload
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="pf_name" placeholder="Enter product name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="productCategorySelect" required>
+                            <option value="">-- Select --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Color(s)</label>
+                        <input type="text" id="pf_colors" placeholder="e.g. Red, Blue, Black">
+                    </div>
+                    <div class="form-group">
+                        <label>Old Price (₹)</label>
+                        <input type="number" id="pf_original_price" step="0.01" placeholder="e.g. 149.99">
+                    </div>
+                    <div class="form-group">
+                        <label>New Price (₹)</label>
+                        <input type="number" id="pf_price" step="0.01" placeholder="e.g. 99.99" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Available Stock</label>
+                        <input type="number" id="pf_stock_qty" placeholder="Total quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Status</label>
+                        <select id="pf_stock_status" required>
+                            <option value="Available">Available</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ratings (0-5)</label>
+                        <input type="number" id="pf_rating" step="0.1" min="0" max="5" placeholder="4.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Reviews</label>
+                        <input type="number" id="pf_reviews" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Playback / Highlight</label>
+                        <input type="text" id="pf_playback" placeholder="e.g. 120hrs Playback">
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (max 2)</label>
+                        <div id="productTagsSelect" class="tags-select-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Discount %</label>
+                        <input type="number" id="pf_discount" placeholder="e.g. 40">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Key Features (comma separated)</label>
+                        <input type="text" id="pf_features" placeholder="Feature 1, Feature 2, Feature 3">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea id="pf_description" rows="3" placeholder="Product description..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" style="margin-top:20px;">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal-overlay" id="categoryModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">Add Category</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('categoryModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addCategoryForm">
+                <input type="hidden" id="editCategoryId" value="">
+                <div class="form-group">
+                    <label>Category Image URL</label>
+                    <input type="text" id="cf_img" placeholder="https://..." required>
+                    <div class="upload-wrapper" style="margin-top: 8px;">
+                        <input type="file" id="cf_img_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'cf_img')">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('cf_img_file').click()">
+                            <ion-icon name="cloud-upload-outline" style="margin-right: 6px;"></ion-icon> Upload Image
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="cf_name" placeholder="Enter category name" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Coupon Modal -->
+    <div class="modal-overlay" id="couponModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="couponModalTitle">Add Coupon</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('couponModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addCouponForm">
+                <input type="hidden" id="editCouponId" value="">
+                <div class="form-group">
+                    <label>Coupon Code</label>
+                    <input type="text" id="cpf_code" placeholder="e.g. SUMMER50" required>
+                </div>
+                <div class="form-group">
+                    <label>Discount Value</label>
+                    <input type="text" id="cpf_discount" placeholder="e.g. 10% or ₹500" required>
+                </div>
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="date" id="cpf_expiry" required>
+                </div>
+                <div class="form-group">
+                    <label>Usage Limit</label>
+                    <input type="number" id="cpf_limit" placeholder="e.g. 100">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Coupon</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tag Modal -->
+    <div class="modal-overlay" id="tagModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="tagModalTitle">Add Tag</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('tagModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addTagForm">
+                <input type="hidden" id="editTagId" value="">
+                <div class="form-group">
+                    <label>Tag Name</label>
+                    <input type="text" id="tf_name" placeholder="e.g. Best Seller" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Tag</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Banner Modal -->
+    <div class="modal-overlay" id="bannerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="bannerModalTitle">Add Banner</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('bannerModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addBannerForm">
+                <input type="hidden" id="editBannerId" value="">
+                <div class="form-group">
+                    <label>Banner Image URL</label>
+                    <input type="text" id="bf_img" placeholder="https://..." required>
+                    <div class="upload-wrapper" style="margin-top: 8px;">
+                        <input type="file" id="bf_img_file" accept="image/*" style="display: none;" onchange="handleImageUpload(this, 'bf_img')">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('bf_img_file').click()">
+                            <ion-icon name="cloud-upload-outline" style="margin-right: 6px;"></ion-icon> Upload Image
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Link to Category (Optional)</label>
+                    <select id="bannerCategorySelect">
+                        <option value="">-- None (No Category Link) --</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Save Banner</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New User</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('userModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <form class="form" id="addUserForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="e.g. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="e.g. support@auriom.in" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" placeholder="e.g. 98765 43210">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Min. 8 chars" required>
+                </div>
+                <div class="form-group">
+                    <label>Admin Access</label>
+                    <select>
+                        <option value="false">No (Customer)</option>
+                        <option value="true">Yes (Admin)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Create User</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order View Modal -->
+    <div class="modal-overlay" id="orderViewModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3>Order Details</h3>
+                <button type="button" class="icon-btn close-modal" onclick="closeModal('orderViewModal')"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <div class="form" id="orderDetailsContent" style="color: var(--text-primary);">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

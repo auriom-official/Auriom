@@ -76,7 +76,7 @@ const Warranty = () => (
         <h2>Contact Support</h2>
         <div className="info-grid">
           {[
-            {icon:'📧', title:'Email', val:'warranty@auriom.com'},
+            {icon:'📧', title:'Email', val:'support@auriom.in'},
             {icon:'📞', title:'Helpline', val:'1800-123-AURIOM'},
             {icon:'🏢', title:'Service Centers', val:'Available in 50+ cities across India'},
           ].map(c => (

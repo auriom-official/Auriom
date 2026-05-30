@@ -1,0 +1,25 @@
+.new-launches-page {
+  min-height: 100vh;
+  background-color: var(--bg-pure);
+}
+
+.new-launches-hero {
+  padding: 140px 0 60px;
+  background: linear-gradient(135deg, #090514 0%, #311042 50%, #120b29 100%);
+  text-align: center;
+  color: #fff;
+}
+
+.new-launches-hero h1 {
+  font-size: var(--font-size-hero);
+  margin-bottom: var(--space-md);
+  color: #fff;
+  letter-spacing: -2px;
+}
+
+.new-launches-hero p {
+  max-width: 600px;
+  margin: 0 auto;
+  color: rgba(255,255,255,0.8);
+  font-size: var(--font-size-md);
+}

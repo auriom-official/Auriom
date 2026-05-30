@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -8,9 +8,28 @@ const Cart = () => {
   const { cart, removeFromCart, updateQuantity, cartCount } = useCart();
   const navigate = useNavigate();
 
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState('');
+
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal > 999 ? 0 : 50;
-  const total = subtotal + shipping;
+  const shipping = subtotal > 499 ? 0 : 50;
+  
+  const handleApplyCoupon = () => {
+    if (couponCode.toUpperCase() === 'WELCOME10') {
+      const discountAmt = subtotal * 0.10;
+      setDiscount(discountAmt);
+      setCouponApplied(true);
+      setCouponError('');
+    } else {
+      setCouponError('Invalid or expired coupon code.');
+      setDiscount(0);
+      setCouponApplied(false);
+    }
+  };
+
+  const total = subtotal + shipping - discount;
 
   if (cartCount === 0) {
     return (
@@ -76,11 +95,37 @@ const Cart = () => {
                 </div>
               )}
               
+              {/* Coupon Section */}
+              <div className="cart-coupon-section" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <div className="coupon-input-group" style={{display: 'flex', gap: '8px'}}>
+                  <input 
+                    type="text" 
+                    placeholder="Enter code (e.g. WELCOME10)" 
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    disabled={couponApplied}
+                    style={{flex: 1, padding: '10px 14px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', fontFamily: 'var(--font-family)', fontSize: '14px', outline: 'none', background: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                  />
+                  <button className="btn" style={{background: 'var(--border-color)', color: 'var(--text-primary)'}} onClick={handleApplyCoupon} disabled={couponApplied}>
+                    {couponApplied ? 'Applied' : 'Apply'}
+                  </button>
+                </div>
+                {couponError && <p style={{color: 'var(--danger)', fontSize: '12px', marginTop: '8px'}}>{couponError}</p>}
+                {couponApplied && <p style={{color: 'var(--success)', fontSize: '12px', marginTop: '8px'}}>Coupon applied successfully!</p>}
+              </div>
+              
+              {discount > 0 && (
+                <div className="summary-row discount-row" style={{color: 'var(--success)', fontWeight: '500'}}>
+                  <span>Discount</span>
+                  <span>-₹{discount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                </div>
+              )}
+
               <div className="summary-divider"></div>
               
               <div className="summary-row summary-total">
                 <span>Total</span>
-                <span>₹{total.toLocaleString()}</span>
+                <span>₹{total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
               
               <button className="btn btn-primary w-100 checkout-btn" onClick={() => navigate('/checkout/address')}>

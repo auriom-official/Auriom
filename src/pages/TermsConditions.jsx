@@ -36,7 +36,7 @@ const TermsConditions = () => (
 
       <div className="info-section">
         <h2>4. No Refund Policy</h2>
-        <p><strong>All sales are final.</strong> AURIOM does not offer monetary refunds on any purchases. However, we provide a <strong>7-Day Replacement Guarantee</strong> for defective or damaged products. Please refer to our <a href="/return-policy" style={{color:'var(--primary-purple)', fontWeight:700}}>Return Policy</a> for complete details.</p>
+        <p><strong>All sales are final.</strong> AURIOM does not offer monetary refunds on any purchases. However, we provide a <strong>2-Day Replacement Guarantee</strong> for defective or damaged products. Please refer to our <a href="/return-policy" style={{color:'var(--primary-purple)', fontWeight:700}}>Return Policy</a> for complete details.</p>
       </div>
 
       <div className="info-section">

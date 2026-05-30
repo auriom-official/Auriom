@@ -121,43 +121,50 @@
   40% { transform: scale(1); }
 }
 
-.chatbot-faqs {
-  padding: 12px 16px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #ffffff;
-}
-
-.chatbot-faqs p {
-  font-size: 12px;
-  color: var(--text-secondary, #666);
+.chat-options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
   margin-bottom: 8px;
 }
 
-.faq-chips {
+.chat-options-title {
+  font-size: 12px;
+  color: var(--text-secondary, #666);
+  margin: 0;
+  margin-left: 8px;
+}
+
+.chat-options-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.faq-chips button {
+.chat-option-btn {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
-  color: #333333;
-  padding: 6px 10px;
+  border: 1px solid var(--primary-purple, #6B46C1);
+  color: var(--primary-purple, #6B46C1);
+  padding: 8px 12px;
   border-radius: var(--radius-pill, 20px);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: left;
 }
 
-.faq-chips button:hover:not(:disabled) {
-  border-color: var(--primary-purple, #6B46C1);
-  color: var(--primary-purple, #6B46C1);
+.chat-option-btn:hover:not(:disabled) {
+  background-color: var(--primary-purple, #6B46C1);
+  color: #ffffff;
 }
 
-.faq-chips button:disabled {
+.chat-option-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  border-color: #cccccc;
+  color: #999999;
 }
 
 @media (max-width: 480px) {

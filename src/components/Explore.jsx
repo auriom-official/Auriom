@@ -6,13 +6,13 @@ const exploreSections = [
   {
     title: 'Explore Bestsellers',
     bg: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800&h=400',
-    link: '/shop',
+    link: '/bestsellers',
     cta: 'Shop Bestsellers',
   },
   {
     title: 'New Launches',
     bg: 'https://images.unsplash.com/photo-1631867726798-47e8ed1e3e03?auto=format&fit=crop&q=80&w=800&h=400',
-    link: '/shop',
+    link: '/new-launches',
     cta: 'View New Arrivals',
   },
   {

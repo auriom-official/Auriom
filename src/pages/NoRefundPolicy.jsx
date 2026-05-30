@@ -28,14 +28,14 @@ const NoRefundPolicy = () => (
           <li>Maintain a sustainable business model while offering best-in-class warranties.</li>
           <li>Protect against fraudulent return claims that raise costs for honest buyers.</li>
         </ul>
-        <p>Instead of refunds, we offer a comprehensive <strong>7-Day Replacement Guarantee</strong> and a <strong>1-Year Manufacturer Warranty</strong>, which provide far greater protection than a simple return window.</p>
+        <p>Instead of refunds, we offer a comprehensive <strong>2-Day Replacement Guarantee</strong> and a <strong>1-Year Manufacturer Warranty</strong>, which provide far greater protection than a simple return window.</p>
       </div>
 
       <div className="info-section">
         <h2>What We Offer Instead of Refunds</h2>
         <div className="info-grid">
           {[
-            {icon:'🔄', title:'7-Day Replacement', desc:'If your product is defective or damaged on arrival, we will replace it at no cost within 7 days of delivery.'},
+            {icon:'🔄', title:'2-Day Replacement', desc:'If your product is defective or damaged on arrival, we will replace it at no cost within 2 days of delivery.'},
             {icon:'🛡️', title:'1-Year Warranty', desc:'Manufacturing defects are covered for a full year. We repair or replace — free of charge.'},
             {icon:'🏪', title:'Service Centers', desc:'50+ service centers across India provide free diagnosis, repair, and assistance during the warranty period.'},
           ].map(f => (
@@ -55,7 +55,7 @@ const NoRefundPolicy = () => (
           <li>Product doesn't meet personal expectations or preferences</li>
           <li>Compatibility issues with third-party devices not mentioned in specs</li>
           <li>Damage due to improper use, drops, or liquid exposure</li>
-          <li>Requests raised after the 7-day replacement window</li>
+          <li>Requests raised after the 2-day replacement window</li>
           <li>Products purchased from unauthorized sellers or third-party resellers</li>
         </ul>
       </div>
@@ -76,8 +76,8 @@ const NoRefundPolicy = () => (
         <p>If you believe this policy has been applied incorrectly to your case, you may escalate to our Grievance Officer:</p>
         <div className="info-grid">
           {[
-            {icon:'👤', title:'Grievance Officer', val:'Ms. Priya Kaur'},
-            {icon:'📧', title:'Email', val:'grievance@auriom.com'},
+            {icon:'👤', title:'Grievance Officer', val:'Grievance Cell, AURIOM Support'},
+            {icon:'📧', title:'Email', val:'support@auriom.in'},
             {icon:'⏱️', title:'Response Time', val:'Within 48 working hours'},
           ].map(c => (
             <div className="info-contact-block" key={c.title}>

@@ -15,13 +15,13 @@ const ReturnPolicy = () => (
       <div className="info-section">
         <div className="info-card" style={{background:'rgba(239,68,68,0.05)', border:'1px solid rgba(239,68,68,0.2)'}}>
           <h3 style={{color:'#DC2626'}}>⚠️ No Refund Policy</h3>
-          <p><strong>AURIOM operates a strict No Refund policy.</strong> All sales are final. We do not offer monetary refunds on any products. However, we offer a <strong>7-Day Replacement Guarantee</strong> for products that are defective or damaged upon arrival. Please read below for full details.</p>
+          <p><strong>AURIOM operates a strict No Refund policy.</strong> All sales are final. We do not offer monetary refunds on any products. However, we offer a <strong>2-Day Replacement Guarantee</strong> for products that are defective or damaged upon arrival. Please read below for full details.</p>
         </div>
       </div>
 
       <div className="info-section">
-        <h2>7-Day Replacement Guarantee</h2>
-        <p>If you receive a product that is defective, damaged, or not as described, you may request a <strong>replacement</strong> (not a refund) within <strong>7 days</strong> of delivery.</p>
+        <h2>2-Day Replacement Guarantee</h2>
+        <p>If you receive a product that is defective, damaged, or not as described, you may request a <strong>replacement</strong> (not a refund) within <strong>2 days</strong> of delivery.</p>
         <h3>Eligible Conditions for Replacement</h3>
         <ul>
           <li>Product received is physically damaged (broken, cracked, bent)</li>
@@ -35,7 +35,7 @@ const ReturnPolicy = () => (
           <li>Product does not match personal preference or expectations</li>
           <li>Damage caused by improper use, dropping, or liquid exposure</li>
           <li>Products with tampered serial numbers or seals</li>
-          <li>Requests raised after the 7-day window</li>
+          <li>Requests raised after the 2-day window</li>
         </ul>
       </div>
 
@@ -44,7 +44,7 @@ const ReturnPolicy = () => (
         <div className="info-grid">
           {[
             {num:'01', title:'Document the Issue', desc:'Take clear photos/video of the damaged or defective product and the packaging.'},
-            {num:'02', title:'Contact within 7 Days', desc:'Email support@auriom.com with Order ID, your name, and the documentation.'},
+            {num:'02', title:'Contact within 2 Days', desc:'Email support@auriom.in with Order ID, your name, and the documentation.'},
             {num:'03', title:'Approval & Pickup', desc:'Our team reviews within 24–48 hrs. If approved, we schedule a free pickup.'},
             {num:'04', title:'Replacement Shipped', desc:'Once we receive the product, a replacement is dispatched within 5–7 business days.'},
           ].map(s => (
@@ -66,7 +66,7 @@ const ReturnPolicy = () => (
         <h2>Contact for Returns</h2>
         <div className="info-grid">
           {[
-            {icon:'📧', title:'Email', val:'returns@auriom.com'},
+            {icon:'📧', title:'Email', val:'support@auriom.in'},
             {icon:'📞', title:'Helpline', val:'1800-123-AURIOM (Mon–Sat 9AM–6PM)'},
           ].map(c => (
             <div className="info-contact-block" key={c.title}>

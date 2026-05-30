@@ -4,7 +4,7 @@ import './TopHeader.css';
 
 const messages = [
   "Get Extra 5% Off On Prepaid Orders | Code: AURIOM5",
-  "Free Express Delivery on all orders above ₹999",
+  "Free Express Delivery on all orders above ₹499",
   "New Launch: AURIOM Nirvana Ion with 120hrs playback!"
 ];
 
