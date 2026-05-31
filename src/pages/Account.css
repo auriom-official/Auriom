@@ -3,7 +3,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 60px var(--space-md) var(--space-xl);
+  padding: 40px var(--space-md) var(--space-xl);
   background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf0 100%);
   background-attachment: fixed;
 }
@@ -200,6 +200,18 @@
   margin-top: var(--space-lg);
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
+}
+
+.account-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 800px) {
+  .account-main-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 480px) {

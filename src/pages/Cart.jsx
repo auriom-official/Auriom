@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useData } from '../context/DataContext';
 import './Cart.css';
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, cartCount } = useCart();
+  const { coupons } = useData();
   const navigate = useNavigate();
 
   const [couponCode, setCouponCode] = useState('');
@@ -17,11 +19,33 @@ const Cart = () => {
   const shipping = subtotal > 499 ? 0 : 50;
   
   const handleApplyCoupon = () => {
-    if (couponCode.toUpperCase() === 'WELCOME10') {
-      const discountAmt = subtotal * 0.10;
+    const coupon = coupons.find(c => c.code.toUpperCase() === couponCode.toUpperCase() && c.status === 'Active');
+    
+    if (coupon) {
+      if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+        setCouponError('This coupon has expired.');
+        setDiscount(0);
+        setCouponApplied(false);
+        return;
+      }
+      
+      let discountAmt = 0;
+      const discountValStr = coupon.discount.toString().trim();
+      
+      if (discountValStr.endsWith('%')) {
+        const percent = parseFloat(discountValStr.replace('%', ''));
+        discountAmt = subtotal * (percent / 100);
+      } else {
+        const flatVal = parseFloat(discountValStr.replace(/[^0-9.]/g, ''));
+        discountAmt = Math.min(flatVal, subtotal);
+      }
+      
       setDiscount(discountAmt);
       setCouponApplied(true);
       setCouponError('');
+      
+      localStorage.setItem('auriom_discount_amt', discountAmt.toString());
+      localStorage.setItem('auriom_applied_coupon', coupon.code);
     } else {
       setCouponError('Invalid or expired coupon code.');
       setDiscount(0);

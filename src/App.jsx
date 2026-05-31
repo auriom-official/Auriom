@@ -28,6 +28,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import NoRefundPolicy from './pages/NoRefundPolicy';
 import Bestsellers from './pages/Bestsellers';
 import NewLaunches from './pages/NewLaunches';
+import OrderDetail from './pages/OrderDetail';
 import { CartProvider } from './context/CartContext';
 import { DataProvider } from './context/DataContext';
 import Chatbot from './components/Chatbot';
@@ -37,7 +38,7 @@ import './App.css';
 const ConditionalFooter = () => {
   const location = useLocation();
   const hiddenRoutes = ['/signin', '/signup', '/login', '/cart', '/account', '/orders', '/shop', '/checkout/address', '/checkout/payment', '/checkout/success', '/track-order'];
-  if (hiddenRoutes.includes(location.pathname)) return null;
+  if (hiddenRoutes.includes(location.pathname) || location.pathname.startsWith('/order/')) return null;
   return <Footer />;
 };
 
@@ -63,6 +64,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/order/:id" element={<OrderDetail />} />
               <Route path="/track-order" element={<TrackOrder />} />
               <Route path="/warranty" element={<Warranty />} />
               <Route path="/return-policy" element={<ReturnPolicy />} />

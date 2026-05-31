@@ -4,22 +4,26 @@
 }
 
 .new-launches-hero {
-  padding: 140px 0 60px;
-  background: linear-gradient(135deg, #090514 0%, #311042 50%, #120b29 100%);
+  padding: 40px 0 20px;
+  background: none;
   text-align: center;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .new-launches-hero h1 {
   font-size: var(--font-size-hero);
   margin-bottom: var(--space-md);
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: -2px;
 }
 
 .new-launches-hero p {
   max-width: 600px;
   margin: 0 auto;
-  color: rgba(255,255,255,0.8);
+  color: var(--text-secondary);
   font-size: var(--font-size-md);
+}
+
+.info-hero-label {
+  display: none !important;
 }

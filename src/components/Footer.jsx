@@ -27,7 +27,7 @@ const Footer = () => {
               <li><Link to="/shop?category=True Wireless Earbuds">Earbuds</Link></li>
               <li><Link to="/shop?category=Wireless Headphones">Headphones</Link></li>
               <li><Link to="/shop?category=Smart Watches">Smart Watches</Link></li>
-              <li><Link to="/shop?category=Wireless Speakers">Speakers</Link></li>
+              {/* <li><Link to="/shop?category=Wireless Speakers">Speakers</Link></li> */}
             </ul>
           </div>
 
@@ -47,7 +47,7 @@ const Footer = () => {
               <li><Link to="/about">About AURIOM</Link></li>
               <li><Link to="/news">News</Link></li>
               <li><Link to="/blog">Read Our Blog</Link></li>
-              <li><Link to="/corporate-gifting">Corporate Gifting</Link></li>
+              {/* <li><Link to="/corporate-gifting">Corporate Gifting</Link></li> */}
             </ul>
           </div>
         </div>

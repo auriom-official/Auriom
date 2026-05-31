@@ -47,7 +47,11 @@
 
 .quick-cat-item:hover .quick-cat-icon {
   border-color: var(--primary-purple);
-  box-shadow: var(--shadow-glow-purple);
+  background-color: rgba(109, 74, 255, 0.05);
+}
+
+.quick-cat-item:hover .quick-cat-icon svg {
+  color: var(--primary-purple) !important;
 }
 
 .quick-cat-name {
@@ -55,6 +59,7 @@
   font-weight: 700;
   text-align: center;
   white-space: nowrap;
+  margin-top: 4px;
 }
 
 @media (min-width: 768px) {

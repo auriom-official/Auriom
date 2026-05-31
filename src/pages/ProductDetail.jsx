@@ -109,52 +109,55 @@ const ProductDetail = () => {
         <div className="pd-grid">
           {/* Image Section */}
           <div className="pd-image-section">
-            {/* Mobile: Swipeable carousel */}
-            {isMobile ? (
-              <div className="pd-mobile-gallery">
-                <div
-                  className="pd-swipe-area"
-                  onTouchStart={handleGalleryTouchStart}
-                  onTouchMove={handleGalleryTouchMove}
-                  onTouchEnd={handleGalleryTouchEnd}
-                  onClick={() => setFullscreen(true)}
-                >
-                  <img src={images[currentImg]} alt={`${product.name} - ${currentImg + 1}`} className="pd-gallery-img" />
-                </div>
-                {images.length > 1 && (
-                  <div className="pd-gallery-dots">
-                    {images.map((_, i) => (
-                      <button
-                        key={i}
-                        className={`pd-dot ${i === currentImg ? 'active' : ''}`}
-                        onClick={() => goToImg(i)}
-                        aria-label={`View image ${i + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
+            {/* Mobile: Swipeable carousel (visible only on mobile) */}
+            <div className="pd-mobile-gallery">
+              <div
+                className="pd-swipe-area"
+                onTouchStart={handleGalleryTouchStart}
+                onTouchMove={handleGalleryTouchMove}
+                onTouchEnd={handleGalleryTouchEnd}
+                onClick={() => setFullscreen(true)}
+              >
+                <img src={images[currentImg]} alt={`${product.name} - ${currentImg + 1}`} className="pd-gallery-img" />
               </div>
-            ) : (
-              /* Desktop: Main image + thumbnail strip */
-              <div className="pd-desktop-gallery">
-                <div className="pd-main-image" onClick={() => setFullscreen(true)} style={{ cursor: 'zoom-in' }}>
-                  <img src={images[currentImg]} alt={product.name} />
+              {images.length > 1 && (
+                <div className="pd-gallery-dots">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`pd-dot ${i === currentImg ? 'active' : ''}`}
+                      onClick={() => goToImg(i)}
+                      aria-label={`View image ${i + 1}`}
+                    />
+                  ))}
                 </div>
-                {images.length > 1 && (
-                  <div className="pd-thumbnail-strip">
-                    {images.map((imgUrl, i) => (
-                      <button
-                        key={i}
-                        className={`pd-thumb ${i === currentImg ? 'active' : ''}`}
-                        onClick={() => goToImg(i)}
-                      >
-                        <img src={imgUrl} alt={`${product.name} thumb ${i + 1}`} />
-                      </button>
-                    ))}
-                  </div>
-                )}
+              )}
+            </div>
+
+            {/* Desktop: Left vertical thumbnail strip + Right Main image (visible only on desktop) */}
+            <div className="pd-desktop-gallery">
+              {images.length > 1 && (
+                <div className="pd-thumbnail-strip">
+                  {images.map((imgUrl, i) => (
+                    <button
+                      key={i}
+                      className={`pd-thumb ${i === currentImg ? 'active' : ''}`}
+                      onMouseEnter={() => goToImg(i)}
+                      onClick={() => {
+                        goToImg(i);
+                        setFullscreen(true);
+                      }}
+                      aria-label={`View thumbnail ${i + 1}`}
+                    >
+                      <img src={imgUrl} alt={`${product.name} thumb ${i + 1}`} />
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="pd-main-image" onClick={() => setFullscreen(true)} style={{ cursor: 'zoom-in' }}>
+                <img src={images[currentImg]} alt={product.name} />
               </div>
-            )}
+            </div>
           </div>
 
           {/* Info Section */}

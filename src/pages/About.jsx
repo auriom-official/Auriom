@@ -5,7 +5,6 @@ const AboutPage = () => (
   <div className="info-page apple-transition">
     <div className="info-hero">
       <div className="container">
-        <span className="info-hero-label">Our Story</span>
         <h1>About AURIOM</h1>
         <p>We started with a simple belief: smart technology should empower daily living. Today, we are India's fastest growing premium tech &amp; smart gadgets brand.</p>
       </div>

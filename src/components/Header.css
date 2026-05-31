@@ -134,7 +134,14 @@
 }
 
 /* Responsive Design */
+.track-mobile-only {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .track-mobile-only {
+    display: block;
+  }
   .mobile-menu-btn {
     display: flex;
   }

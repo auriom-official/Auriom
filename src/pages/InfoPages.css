@@ -1,53 +1,36 @@
 /* Shared styles for all info/legal pages */
 .info-page {
-  padding: 100px 0 var(--space-section);
+  padding: 10px 0 var(--space-section);
   min-height: 80vh;
 }
 
 .info-hero {
-  background: linear-gradient(135deg, #111111 0%, #2d2d2d 100%);
-  color: #FFFFFF;
-  padding: 60px 0;
-  margin-bottom: var(--space-section);
+  background: none;
+  color: var(--text-primary);
+  padding: 0;
+  margin-bottom: 40px;
   position: relative;
   overflow: hidden;
 }
 
 .info-hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
-  pointer-events: none;
+  display: none;
 }
 
 .info-hero-label {
-  display: inline-block;
-  padding: 5px 14px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: var(--space-md);
+  display: none !important;
 }
 
 .info-hero h1 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 900;
-  color: #FFFFFF;
-  margin-bottom: var(--space-md);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
   line-height: 1.1;
 }
 
 .info-hero p {
-  color: rgba(255,255,255,0.65);
+  color: var(--text-secondary);
   font-size: var(--font-size-md);
   max-width: 600px;
 }
@@ -186,6 +169,6 @@
 }
 
 @media (max-width: 768px) {
-  .info-hero { padding: 40px 0; }
+  .info-hero { padding: 0; margin: 0; }
   .info-grid { grid-template-columns: 1fr; }
 }

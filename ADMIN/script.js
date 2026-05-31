@@ -248,6 +248,112 @@ async function loadAllData() {
     populateBannerCategorySelect();
     populateProductTagsSelect();
     updateDashboardStats();
+    loadAdminSettings();
+}
+
+// ============================================
+// ADMIN SETTINGS — Load & Save Profile
+// ============================================
+function loadAdminSettings() {
+    try {
+        const adminJson = localStorage.getItem('auriom_admin_user');
+        if (!adminJson) return;
+        const admin = JSON.parse(adminJson);
+
+        // Populate avatar display
+        const avatarEl = document.getElementById('adminProfileAvatar');
+        if (avatarEl && admin.name) {
+            avatarEl.innerText = admin.name.charAt(0).toUpperCase();
+        }
+
+        // Populate display badges
+        const nameDisplay = document.getElementById('adminProfileDisplayName');
+        const emailDisplay = document.getElementById('adminProfileDisplayEmail');
+        const roleDisplay = document.getElementById('adminProfileDisplayRole');
+
+        if (nameDisplay) nameDisplay.innerText = admin.name || 'Admin';
+        if (emailDisplay) emailDisplay.innerText = admin.email || '';
+        if (roleDisplay) roleDisplay.innerText = admin.is_admin ? 'Super Admin' : 'Admin';
+
+        // Populate editable form fields
+        const idField = document.getElementById('adminProfileId');
+        const nameField = document.getElementById('adminProfileName');
+        const emailField = document.getElementById('adminProfileEmail');
+        const phoneField = document.getElementById('adminProfilePhone');
+        const statusField = document.getElementById('adminProfileStatus');
+
+        if (idField) idField.value = admin.id || '';
+        if (nameField) nameField.value = admin.name || '';
+        if (emailField) emailField.value = admin.email || '';
+        if (phoneField) phoneField.value = admin.phone || '';
+        if (statusField) statusField.value = admin.status || 'Active';
+
+    } catch (e) {
+        console.error('[Admin] Failed to load admin settings:', e);
+    }
+
+    // Setup form submit handler
+    const adminProfileForm = document.getElementById('adminProfileForm');
+    if (adminProfileForm) {
+        // Only attach once
+        adminProfileForm.removeEventListener('submit', handleAdminProfileSave);
+        adminProfileForm.addEventListener('submit', handleAdminProfileSave);
+    }
+}
+
+async function handleAdminProfileSave(e) {
+    e.preventDefault();
+    const btn = document.getElementById('adminProfileSaveBtn');
+    const msg = document.getElementById('adminProfileMsg');
+    if (btn) { btn.disabled = true; btn.innerText = 'Saving...'; }
+
+    const adminId = document.getElementById('adminProfileId')?.value;
+    const newName = document.getElementById('adminProfileName')?.value.trim();
+    const newPhone = document.getElementById('adminProfilePhone')?.value.trim();
+    const newPassword = document.getElementById('adminProfilePassword')?.value;
+
+    if (!adminId) {
+        if (msg) { msg.style.display = 'inline'; msg.style.color = 'red'; msg.innerText = 'Error: Admin ID not found. Please re-login.'; }
+        if (btn) { btn.disabled = false; btn.innerText = 'Save Profile Changes'; }
+        return;
+    }
+
+    const updatePayload = { name: newName, phone: newPhone };
+    if (newPassword && newPassword.trim().length > 0) {
+        updatePayload.password = newPassword.trim();
+    }
+
+    const { data, error } = await db.from('users').update(updatePayload).eq('id', adminId).select().single();
+
+    if (error) {
+        if (msg) { msg.style.display = 'inline'; msg.style.color = 'red'; msg.innerText = 'Save failed: ' + error.message; }
+    } else {
+        // Update localStorage with new data
+        const existing = JSON.parse(localStorage.getItem('auriom_admin_user') || '{}');
+        const updated = { ...existing, ...data };
+        localStorage.setItem('auriom_admin_user', JSON.stringify(updated));
+
+        // Refresh display
+        const nameDisplay = document.getElementById('adminProfileDisplayName');
+        if (nameDisplay) nameDisplay.innerText = updated.name || 'Admin';
+        const avatarEl = document.getElementById('adminProfileAvatar');
+        if (avatarEl && updated.name) avatarEl.innerText = updated.name.charAt(0).toUpperCase();
+
+        // Update top navbar avatar
+        const topAvatarEl = document.getElementById('adminAvatar');
+        if (topAvatarEl && updated.name) {
+            topAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(updated.name)}&background=0D8ABC&color=fff`;
+        }
+
+        // Clear password field
+        const pwField = document.getElementById('adminProfilePassword');
+        if (pwField) pwField.value = '';
+
+        if (msg) { msg.style.display = 'inline'; msg.style.color = '#10b981'; msg.innerText = '✓ Profile saved successfully!'; }
+        setTimeout(() => { if (msg) msg.style.display = 'none'; }, 3500);
+    }
+
+    if (btn) { btn.disabled = false; btn.innerText = 'Save Profile Changes'; }
 }
 
 async function fetchTable(tableName) {
@@ -264,8 +370,31 @@ async function fetchTable(tableName) {
 }
 
 // ============================================
-// FILE UPLOADS TO SUPABASE STORAGE
+// FILE UPLOADS & CLEANUP TO SUPABASE STORAGE
 // ============================================
+async function deleteFileFromSupabase(url) {
+    if (!url || !db) return;
+    try {
+        if (url.includes('/storage/v1/object/public/auriom-images/')) {
+            const parts = url.split('/storage/v1/object/public/auriom-images/');
+            const filePath = parts[parts.length - 1];
+            if (filePath) {
+                console.log('[Admin] Smart Cleanup: Deleting file from storage:', filePath);
+                const { error } = await db.storage
+                    .from('auriom-images')
+                    .remove([filePath]);
+                if (error) {
+                    console.error('[Admin] Error deleting file from storage:', error.message);
+                } else {
+                    console.log('[Admin] Successfully deleted file:', filePath);
+                }
+            }
+        }
+    } catch (e) {
+        console.error('[Admin] Failed to delete file:', e);
+    }
+}
+
 async function uploadFileToSupabase(file) {
     if (!db) {
         console.error('[Admin] Supabase client not initialized');
@@ -308,6 +437,12 @@ window.handleImageUpload = async function(fileInput, targetInputId) {
     uploadBtn.innerHTML = '<ion-icon name="sync-outline" class="spin"></ion-icon> Uploading...';
     
     try {
+        // Smart image replacement: clean up old image if present in the input slot
+        const oldUrl = document.getElementById(targetInputId).value.trim();
+        if (oldUrl) {
+            await deleteFileFromSupabase(oldUrl);
+        }
+
         const publicUrl = await uploadFileToSupabase(file);
         if (publicUrl) {
             document.getElementById(targetInputId).value = publicUrl;
@@ -839,6 +974,16 @@ window.deleteUser = async function(id) {
 
 window.deleteProduct = async function(id) {
     if (!confirm('Delete this product?')) return;
+    
+    // Find product to delete its images from storage
+    const p = products.find(x => x.id === id);
+    if (p) {
+        if (p.img) await deleteFileFromSupabase(p.img);
+        if (p.img2) await deleteFileFromSupabase(p.img2);
+        if (p.img3) await deleteFileFromSupabase(p.img3);
+        if (p.img4) await deleteFileFromSupabase(p.img4);
+    }
+
     const { error } = await db.from('products').delete().eq('id', id);
     if (!error) { products = await fetchTable('products'); renderProducts(); updateDashboardStats(); }
     else alert('Failed: ' + error.message);
@@ -846,6 +991,13 @@ window.deleteProduct = async function(id) {
 
 window.deleteCategory = async function(id) {
     if (!confirm('Delete this category?')) return;
+
+    // Find category to delete its image from storage
+    const c = categories.find(x => x.id === id);
+    if (c && c.img) {
+        await deleteFileFromSupabase(c.img);
+    }
+
     const { error } = await db.from('categories').delete().eq('id', id);
     if (!error) { categories = await fetchTable('categories'); renderCategories(); populateProductCategorySelect(); }
     else alert('Failed: ' + error.message);
@@ -871,6 +1023,13 @@ window.deleteBanner = async function(id) {
         return;
     }
     if (!confirm('Delete this banner?')) return;
+
+    // Find banner to delete its image from storage
+    const b = banners.find(x => x.id === id);
+    if (b && b.img) {
+        await deleteFileFromSupabase(b.img);
+    }
+
     const { error } = await db.from('banners').delete().eq('id', id);
     if (!error) {
         banners = await fetchTable('banners');
@@ -916,6 +1075,14 @@ function setupFormHandlers() {
 
         let error;
         if (editingProductId) {
+            // Smart cleanup safety net: delete old image files from storage if replaced
+            const oldP = products.find(x => x.id === editingProductId);
+            if (oldP) {
+                if (oldP.img && oldP.img !== productData.img) await deleteFileFromSupabase(oldP.img);
+                if (oldP.img2 && oldP.img2 !== productData.img2) await deleteFileFromSupabase(oldP.img2);
+                if (oldP.img3 && oldP.img3 !== productData.img3) await deleteFileFromSupabase(oldP.img3);
+                if (oldP.img4 && oldP.img4 !== productData.img4) await deleteFileFromSupabase(oldP.img4);
+            }
             // Update existing
             ({ error } = await db.from('products').update(productData).eq('id', editingProductId));
         } else {
@@ -945,6 +1112,11 @@ function setupFormHandlers() {
 
         let error;
         if (editingCategoryId) {
+            // Smart cleanup safety net: delete old category image from storage if replaced
+            const oldC = categories.find(x => x.id === editingCategoryId);
+            if (oldC && oldC.img && oldC.img !== catData.img) {
+                await deleteFileFromSupabase(oldC.img);
+            }
             ({ error } = await db.from('categories').update(catData).eq('id', editingCategoryId));
         } else {
             catData.count = 0;
@@ -1027,6 +1199,11 @@ function setupFormHandlers() {
 
         let error;
         if (editingBannerId) {
+            // Smart cleanup safety net: delete old banner image from storage if replaced
+            const oldB = banners.find(x => x.id === editingBannerId);
+            if (oldB && oldB.img && oldB.img !== bannerData.img) {
+                await deleteFileFromSupabase(oldB.img);
+            }
             ({ error } = await db.from('banners').update(bannerData).eq('id', editingBannerId));
         } else {
             ({ error } = await db.from('banners').insert([bannerData]));

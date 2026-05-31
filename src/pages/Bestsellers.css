@@ -4,36 +4,26 @@
 }
 
 .bestsellers-hero {
-  padding: 140px 0 60px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  padding: 40px 0 20px;
+  background: none;
   text-align: center;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .bestsellers-hero h1 {
   font-size: var(--font-size-hero);
   margin-bottom: var(--space-md);
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: -2px;
 }
 
 .bestsellers-hero p {
   max-width: 600px;
   margin: 0 auto;
-  color: rgba(255,255,255,0.8);
+  color: var(--text-secondary);
   font-size: var(--font-size-md);
 }
 
 .info-hero-label {
-  display: inline-block;
-  background: rgba(255,255,255,0.1);
-  padding: 6px 16px;
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: var(--space-lg);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
+  display: none !important;
 }
