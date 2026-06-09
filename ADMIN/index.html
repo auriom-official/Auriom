@@ -372,9 +372,12 @@
                 <section id="orders" class="view">
                     <div class="header-action">
                         <h2>Orders</h2>
-                        <div class="section-search">
-                            <ion-icon name="search-outline"></ion-icon>
-                            <input type="text" id="searchOrders" placeholder="Search order ID, customer..." oninput="renderOrders(this.value)">
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="btn btn-outline" style="font-size:12px; padding:8px 12px; border-color: var(--primary-purple); color: var(--primary-purple); white-space: nowrap;" onclick="downloadBulkInvoices()"><ion-icon name="print-outline"></ion-icon> Print Packing Slips</button>
+                            <div class="section-search">
+                                <ion-icon name="search-outline"></ion-icon>
+                                <input type="text" id="searchOrders" placeholder="Search order ID, customer..." oninput="renderOrders(this.value)">
+                            </div>
                         </div>
                     </div>
                     <div class="table-container">

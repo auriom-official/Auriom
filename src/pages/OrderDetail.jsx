@@ -221,6 +221,7 @@ const OrderDetail = () => {
   // Calculate timelines
   const isPending = order.status === 'Pending';
   const isProcessing = order.status === 'Processing';
+  const isShipped = order.status === 'Shipped';
   const isCompleted = order.status === 'Completed';
   const isCancelled = order.status === 'Cancelled';
 
@@ -256,7 +257,10 @@ const OrderDetail = () => {
               <span style={{ fontSize: '22px' }}>❌</span>
               <div>
                 <strong style={{ display: 'block', fontSize: '14px' }}>Order Cancelled</strong>
-                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>This order was cancelled. Contact support for help.</span>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                  This order was cancelled. 
+                  {payment && payment.status === 'Success' ? ' Money will reflect to your account in 3-5 days.' : ' Contact support for help.'}
+                </span>
               </div>
             </div>
           ) : (
@@ -266,8 +270,8 @@ const OrderDetail = () => {
 
               {[
                 { icon: <Package size={14} />, label: 'Placed',     active: true },
-                { icon: <ShieldCheck size={14} />, label: 'Processing', active: isProcessing || isCompleted },
-                { icon: <Truck size={14} />,    label: 'Shipped',    active: isCompleted },
+                { icon: <ShieldCheck size={14} />, label: 'Processing', active: isProcessing || isShipped || isCompleted },
+                { icon: <Truck size={14} />,    label: 'Shipped',    active: isShipped || isCompleted },
                 { icon: <CheckCircle size={14} />, label: 'Delivered', active: isCompleted },
               ].map((step, idx) => (
                 <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, zIndex: 1, minWidth: 0 }}>

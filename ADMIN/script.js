@@ -694,6 +694,7 @@ function renderOrders(filter = '') {
                 <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
                 <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
                 <option value="Completed" ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
                 <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
             </select>
         `;
@@ -945,7 +946,10 @@ window.viewOrder = function(id) {
         const dateStr = o.created_at ? new Date(o.created_at).toLocaleString() : 'N/A';
         document.getElementById('orderDetailsContent').innerHTML = `
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <p><strong>Order ID:</strong> ${o.id}</p>
+                <div style="display:flex; justify-content:space-between;">
+                  <p><strong>Order ID:</strong> ${o.id}</p>
+                  ${o.status === 'Processing' ? `<button class="btn btn-outline" style="padding:4px 8px; font-size:12px;" onclick="downloadAdminInvoice('${o.id}')">Print Slip</button>` : ''}
+                </div>
                 <p><strong>Customer:</strong> ${o.customer}</p>
                 <p><strong>Address:</strong> ${o.address || 'N/A'}</p>
                 <p><strong>Payment Method:</strong> ${o.payment || 'N/A'}</p>
@@ -960,6 +964,128 @@ window.viewOrder = function(id) {
         `;
         openModal('orderViewModal');
     }
+};
+
+window.downloadAdminInvoice = function(id) {
+    const o = orders.find(x => String(x.id) === String(id));
+    if (!o) return;
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
+    printWindow.document.write(generatePackingSlipHTML([o]));
+    printWindow.document.close();
+};
+
+window.downloadBulkInvoices = function() {
+    const processingOrders = orders.filter(o => o.status === 'Processing');
+    if (processingOrders.length === 0) {
+        alert("No orders with 'Processing' status found.");
+        return;
+    }
+    const printWindow = window.open('', '_blank', 'width=600,height=800');
+    printWindow.document.write(generatePackingSlipHTML(processingOrders));
+    printWindow.document.close();
+};
+
+window.generatePackingSlipHTML = function(orderList) {
+    const slips = orderList.map(o => {
+        const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString() : 'N/A';
+        return `
+            <div class="slip">
+                <div class="header">
+                    <h2 style="margin:0; font-size: 24px; text-transform: uppercase;">Auriom</h2>
+                    <p style="margin: 4px 0 0; font-size: 12px; color: #555;">Packing Slip</p>
+                </div>
+                <div class="info-row">
+                    <div>
+                        <div class="label">Order ID</div>
+                        <div class="value">#${o.id}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">Date</div>
+                        <div class="value">${dateStr}</div>
+                    </div>
+                </div>
+                <div class="ship-to">
+                    <div class="label">Ship To:</div>
+                    <div class="value" style="font-size: 14px; margin-top:4px;">
+                        <strong>${o.customer}</strong><br>
+                        ${(o.address || 'N/A').replace(/\\n/g, '<br>')}
+                    </div>
+                </div>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th style="width: 50px; text-align: center;">Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(o.products || '').split(', ').map(prod => {
+                            const parts = prod.split('x ');
+                            const count = parts[0] ? parts[0].trim() : '';
+                            const name = parts[1] || prod;
+                            return '<tr><td>' + name + '</td><td style="text-align: center;"><strong>' + count + '</strong></td></tr>';
+                        }).join('')}
+                    </tbody>
+                </table>
+                <div class="footer">
+                    Thank you for shopping with Auriom!<br>
+                    <small>support@auriom.in | www.auriom.in</small>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    return `
+      <html>
+        <head>
+          <title>Packing Slips</title>
+          <style>
+            @page { size: 4in 6in; margin: 0; }
+            body { 
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+                margin: 0; 
+                padding: 0; 
+                background: #ccc;
+            }
+            .slip {
+                width: 4in;
+                height: 6in;
+                padding: 0.2in;
+                box-sizing: border-box;
+                background: #fff;
+                margin: 0 auto;
+                page-break-after: always;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                overflow: hidden;
+            }
+            .slip:last-child {
+                page-break-after: auto;
+            }
+            .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+            .label { font-size: 10px; color: #666; text-transform: uppercase; }
+            .value { font-size: 12px; font-weight: bold; }
+            .info-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+            .ship-to { border: 1px solid #000; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+            .items-table { width: 100%; border-collapse: collapse; margin-bottom: auto; }
+            .items-table th { border-bottom: 2px solid #000; text-align: left; padding: 5px 0; font-size: 11px; text-transform: uppercase; }
+            .items-table td { border-bottom: 1px solid #eee; padding: 8px 0; font-size: 12px; }
+            .footer { text-align: center; border-top: 2px dashed #000; padding-top: 10px; margin-top: 15px; font-size: 12px; font-weight: bold; }
+            @media print {
+                body { background: #fff; }
+                .slip { margin: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          ${slips}
+          <script>
+            window.onload = function() { setTimeout(() => { window.print(); }, 500); }
+          </script>
+        </body>
+      </html>
+    `;
 };
 
 // ============================================
@@ -1043,6 +1169,19 @@ window.deleteBanner = async function(id) {
 // FORM SUBMISSIONS (Add/Edit)
 // ============================================
 function setupFormHandlers() {
+    const calcDiscount = () => {
+        const oldP = parseFloat(document.getElementById('pf_original_price').value);
+        const newP = parseFloat(document.getElementById('pf_price').value);
+        if (oldP && newP && oldP > newP) {
+            const discount = Math.round(((oldP - newP) / oldP) * 100);
+            document.getElementById('pf_discount').value = discount;
+        } else {
+            document.getElementById('pf_discount').value = '';
+        }
+    };
+    document.getElementById('pf_original_price')?.addEventListener('input', calcDiscount);
+    document.getElementById('pf_price')?.addEventListener('input', calcDiscount);
+
     // Add/Edit Product
     document.getElementById('addProductForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1342,18 +1481,19 @@ function updateCharts(revenueVal) {
     let pendingCount = orders.filter(o => o.status === 'Pending').length;
     let processingCount = orders.filter(o => o.status === 'Processing').length;
     let cancelledCount = orders.filter(o => o.status === 'Cancelled').length;
+    let shippedCount = orders.filter(o => o.status === 'Shipped').length;
 
     const orderCtx = document.getElementById('orderStatusChart');
     if (orderCtx) {
         if (orderStatusChartInstance) orderStatusChartInstance.destroy();
-        const hasOrders = (completedCount + pendingCount + processingCount + cancelledCount) > 0;
+        const hasOrders = (completedCount + pendingCount + processingCount + cancelledCount + shippedCount) > 0;
         orderStatusChartInstance = new Chart(orderCtx, {
             type: 'doughnut',
             data: {
-                labels: hasOrders ? ['Completed', 'Pending', 'Processing', 'Cancelled'] : ['No Orders Yet'],
+                labels: hasOrders ? ['Completed', 'Pending', 'Processing', 'Cancelled', 'Shipped'] : ['No Orders Yet'],
                 datasets: [{
-                    data: hasOrders ? [completedCount, pendingCount, processingCount, cancelledCount] : [1],
-                    backgroundColor: hasOrders ? ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'] : ['#e2e8f0'],
+                    data: hasOrders ? [completedCount, pendingCount, processingCount, cancelledCount, shippedCount] : [1],
+                    backgroundColor: hasOrders ? ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6'] : ['#e2e8f0'],
                     borderWidth: 0
                 }]
             },

@@ -73,6 +73,7 @@ const Orders = () => {
             const isCompleted = o.status === 'Completed';
             const isCancelled = o.status === 'Cancelled';
             const isProcessing = o.status === 'Processing';
+            const isShipped = o.status === 'Shipped';
             
             let statusColor = 'var(--text-secondary)';
             let statusBg = 'rgba(0,0,0,0.05)';
@@ -86,6 +87,9 @@ const Orders = () => {
             } else if (isProcessing) {
               statusColor = 'var(--primary-purple)';
               statusBg = 'rgba(139, 92, 246, 0.1)';
+            } else if (isShipped) {
+              statusColor = '#8b5cf6';
+              statusBg = 'rgba(139, 92, 246, 0.15)';
             }
 
             return (

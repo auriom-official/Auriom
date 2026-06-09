@@ -5,19 +5,19 @@ import './Explore.css';
 const exploreSections = [
   {
     title: 'Explore Bestsellers',
-    bg: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800&h=400',
+    bg: 'https://tse2.mm.bing.net/th/id/OIP.7f3gFCompEKlNKLlJjLRdwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
     link: '/bestsellers',
     cta: 'Shop Bestsellers',
   },
   {
     title: 'New Launches',
-    bg: 'https://images.unsplash.com/photo-1631867726798-47e8ed1e3e03?auto=format&fit=crop&q=80&w=800&h=400',
+    bg: 'https://wallpaperaccess.com/thumb/1771060.jpg',
     link: '/new-launches',
     cta: 'View New Arrivals',
   },
   {
     title: 'Smart Watch Collection',
-    bg: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=800&h=400',
+    bg: '../assets/explore/swp.jpeg',
     link: '/shop?category=Smart Watches',
     cta: 'Explore Watches',
   },

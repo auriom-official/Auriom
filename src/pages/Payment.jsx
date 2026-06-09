@@ -33,6 +33,16 @@ const Payment = () => {
     setTotal(calcSubtotal + (calcSubtotal > 499 ? 0 : 50) - discAmt);
   }, [cart]);
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePlaceOrder = async () => {
     if (!shippingAddress) {
       setError('Shipping address is missing. Please go back and enter shipping details.');
@@ -43,6 +53,13 @@ const Payment = () => {
     setError('');
 
     try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        setError("Razorpay SDK failed to load. Are you online?");
+        setLoading(false);
+        return;
+      }
+
       // 1. Generate Order ID
       const orderId = 'AUR-' + Date.now().toString().slice(-6) + Math.floor(1000 + Math.random() * 9000);
 
@@ -51,34 +68,77 @@ const Payment = () => {
         id: orderId,
         customer: user ? `${user.name} (${user.email})` : `${shippingAddress.name} (${shippingAddress.email || 'Guest'})`,
         address: `${shippingAddress.name}, Ph: ${shippingAddress.phone}, ${shippingAddress.addressLine}${shippingAddress.addressLine2 ? ', ' + shippingAddress.addressLine2 : ''}, Landmark: ${shippingAddress.landmark}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.country} - ${shippingAddress.pincode}`,
-        payment: 'Online Payment (Success)',
+        payment: 'Online Payment (Pending)',
         total: total,
-        status: 'Pending',
+        status: 'Pending Payment',
         products: cart.map(item => `${item.quantity}x ${item.name}`).join(', ')
       };
 
       // 3. Prepare Payment Log
+      const txnId = 'TXN-' + Math.random().toString(36).substring(2, 10).toUpperCase();
       const paymentData = {
-        txn_id: 'TXN-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
-        method: 'Online Payment (UPI/Card/Netbanking)',
+        txn_id: txnId,
+        method: 'Online Payment',
         amount: total,
-        status: 'Success'
+        status: 'Pending'
       };
 
-      // 4. Save to Database
+      // 4. Save to Database as Pending
       await createOrder(orderData, paymentData);
 
-      // 5. Clear Cart & Saved checkout totals
-      clearCart();
-      localStorage.removeItem('auriom_discount_amt');
-      localStorage.removeItem('auriom_applied_coupon');
+      // 5. Open Razorpay Checkout
+      const options = {
+        key: "rzp_live_SzbedHtPFZznC0", 
+        amount: Math.round(total * 100),
+        currency: "INR",
+        name: "Auriom",
+        description: "Order " + orderId,
+        handler: async function (response) {
+          try {
+            const { supabase } = await import('../supabase');
+            await supabase.from('orders').update({
+              status: 'Processing',
+              payment: 'Online Payment (Success)'
+            }).eq('id', orderId);
 
-      // 6. Redirect to Success Page with Order ID
-      navigate(`/checkout/success?orderId=${orderId}`);
+            await supabase.from('payments').update({
+              status: 'Success',
+              txn_id: response.razorpay_payment_id || txnId
+            }).eq('order_id', orderId);
+
+            clearCart();
+            localStorage.removeItem('auriom_discount_amt');
+            localStorage.removeItem('auriom_applied_coupon');
+
+            navigate(`/checkout/success?orderId=${orderId}`);
+          } catch (err) {
+            console.error("Error updating order:", err);
+            navigate(`/orders`);
+          }
+        },
+        prefill: {
+          name: shippingAddress.name,
+          email: shippingAddress.email || (user ? user.email : ""),
+          contact: shippingAddress.phone || ""
+        },
+        theme: {
+          color: "#8B5CF6"
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+            setError("Payment cancelled. Order saved as Pending.");
+            navigate(`/orders`);
+          }
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
     } catch (err) {
       console.error(err);
       setError('Failed to create order: ' + err.message);
-    } finally {
       setLoading(false);
     }
   };

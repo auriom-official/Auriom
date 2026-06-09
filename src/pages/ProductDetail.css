@@ -385,6 +385,13 @@
    RESPONSIVE — MOBILE
    ============================================= */
 @media (max-width: 768px) {
+  .breadcrumbs {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+  }
   .product-detail-page { padding-top: 20px; }
 
   .pd-grid {

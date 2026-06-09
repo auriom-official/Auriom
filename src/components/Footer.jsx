@@ -24,10 +24,10 @@ const Footer = () => {
           <div className="footer-links-group">
             <h3 className="footer-heading">Shop</h3>
             <ul className="footer-links">
-              <li><Link to="/shop?category=True Wireless Earbuds">Earbuds</Link></li>
+              <li><Link to="/shop?category=Drones">Drones</Link></li>
               <li><Link to="/shop?category=Wireless Headphones">Headphones</Link></li>
               <li><Link to="/shop?category=Smart Watches">Smart Watches</Link></li>
-              {/* <li><Link to="/shop?category=Wireless Speakers">Speakers</Link></li> */}
+              <li><Link to="/shop?category=Accessories">Accessories</Link></li>
             </ul>
           </div>
 

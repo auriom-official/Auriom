@@ -4,7 +4,7 @@ import './TrustBadges.css';
 const badges = [
   { icon: '⚡', title: 'Smart Gadgets', desc: 'Premium quality gear' },
   { icon: '🔒', title: 'Secure SSL Checkout', desc: '100% safe payments' },
-  { icon: '🚚', title: 'Free Express Delivery', desc: 'On orders above ₹499' },
+  { icon: '🚚', title: 'Free Delivery', desc: 'On orders above ₹499' },
   { icon: '🔄', title: '2 Days Return Policy', desc: 'Hassle-free replacement' },
 ];
 

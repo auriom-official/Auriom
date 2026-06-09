@@ -36,8 +36,7 @@ const Header = () => {
             <ul className="nav-list">
               <li><Link to="/" className="nav-link">Home</Link></li>
               <li><Link to="/shop" className="nav-link">Shop All</Link></li>
-              <li><Link to="/shop?category=True Wireless" className="nav-link">Earbuds</Link></li>
-              <li><Link to="/shop?category=Smart Watches" className="nav-link">Watches</Link></li>
+              <li><Link to="/shop?category=Accessories" className="nav-link">Accessories</Link></li>
               <li><Link to="/track-order" className="nav-link track-mobile-only">Track Order</Link></li>
               <li><Link to="/about" className="nav-link">About</Link></li>
               <li><Link to="/contact" className="nav-link">Contact</Link></li>
