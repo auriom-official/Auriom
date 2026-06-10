@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useData } from '../context/DataContext';
+import { getDailySeed, seededShuffle } from '../utils/shuffle';
 import './Shop.css';
 
 const sortOptions = ['Popular', 'Price: Low to High', 'Price: High to Low', 'Newest'];
@@ -19,12 +20,18 @@ const Shop = () => {
     return ['All', ...new Set(products.map(p => p.category))];
   }, [products]);
 
+  const randomizedProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    const seed = getDailySeed();
+    return seededShuffle(products, seed);
+  }, [products]);
+
   const filtered = useMemo(() => {
-    let list = category === 'All' ? [...products] : products.filter(p => p.category === category);
+    let list = category === 'All' ? [...randomizedProducts] : randomizedProducts.filter(p => p.category === category);
     if (sort === 'Price: Low to High') list.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
     if (sort === 'Price: High to Low') list.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
     return list;
-  }, [products, category, sort]);
+  }, [randomizedProducts, category, sort]);
 
   if (loading) {
     return <div style={{paddingTop: '100px', textAlign: 'center'}}>Loading Shop...</div>;

@@ -3,16 +3,23 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useData } from '../context/DataContext';
+import { getDailySeed, seededShuffle } from '../utils/shuffle';
 import './BestSellers.css';
 
 const BestSellers = () => {
   const { addToCart } = useCart();
   const { products } = useData();
 
-  // Show only bestsellers tagged items on homepage, or limit to top 6
-  const filtered = products.filter(p => p.tag && p.tag.toLowerCase().includes('best seller')).slice(0, 6);
-  // If we don't have enough tagged products, just show some default ones
-  const displayProducts = filtered.length >= 3 ? filtered : products.slice(0, 6);
+  // Show only bestsellers tagged items on homepage, or fallback to all products
+  const filtered = products.filter(p => p.tag && p.tag.toLowerCase().includes('best seller'));
+  const pool = filtered.length >= 3 ? filtered : products;
+
+  // Randomize the products daily and limit to top 6
+  const displayProducts = React.useMemo(() => {
+    if (!pool || pool.length === 0) return [];
+    const seed = getDailySeed();
+    return seededShuffle(pool, seed).slice(0, 6);
+  }, [pool]);
 
   return (
     <section className="bestsellers-section py-section" id="bestsellers">

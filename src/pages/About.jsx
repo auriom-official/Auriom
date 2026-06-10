@@ -1,5 +1,7 @@
 import React from 'react';
 import './InfoPages.css';
+import govindaImg from '../../assets/people/govinda.png';
+
 
 const AboutPage = () => (
   <div className="info-page apple-transition">
@@ -65,12 +67,16 @@ const AboutPage = () => (
         <h2>Leadership Team</h2>
         <div className="info-grid">
           {[
-            {name:'Govinda Yadav', role:'Co-Founder & CEO', bg:'#E8F4FD'},
+            {name:'Govinda Yadav', role:'Co-Founder & CEO', bg:'#E8F4FD', img: govindaImg},
             {name:'Unknown', role:'Co-Founder', bg:'#FDE8F4'},
           ].map(p => (
             <div className="info-card" key={p.name} style={{textAlign:'center'}}>
-              <div style={{width:80, height:80, borderRadius:'50%', background:p.bg, margin:'0 auto 12px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'28px', fontWeight:900, color:'var(--text-primary)'}}>
-                {p.name.charAt(0)}
+              <div style={{width:80, height:80, borderRadius:'50%', background:p.bg, margin:'0 auto 12px', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
+                {p.img ? (
+                  <img src={p.img} alt={p.name} style={{width:'100%', height:'100%', objectFit:'cover'}} />
+                ) : (
+                  <span style={{fontSize:'28px', fontWeight:900, color:'var(--text-primary)'}}>{p.name.charAt(0)}</span>
+                )}
               </div>
               <h3 style={{marginTop:0, marginBottom:'4px'}}>{p.name}</h3>
               <p style={{margin:0, fontSize:'var(--font-size-xs)'}}>{p.role}</p>
