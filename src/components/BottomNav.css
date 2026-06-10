@@ -19,6 +19,15 @@
     padding: 10px 0;
     z-index: 1000;
     border-top: var(--glass-border);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .bottom-nav.hidden {
+    transform: translateY(100%);
+  }
+
+  .bottom-nav.visible {
+    transform: translateY(0);
   }
 
   .bottom-nav-item {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, User, UserCheck, Menu, X } from 'lucide-react';
 import SearchModal from './SearchModal';
 import { useCart } from '../context/CartContext';
+import { useData } from '../context/DataContext';
 import './Header.css';
 
 const Header = () => {
@@ -11,6 +12,7 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const { cartCount, isAnimating } = useCart();
+  const { user } = useData();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -29,7 +31,7 @@ const Header = () => {
           </button>
 
           <div className="logo">
-            <Link to="/">AURIOM</Link>
+            <Link to="/" className={location.pathname === '/' ? 'logo-home' : 'logo-other'}>AURIOM</Link>
           </div>
 
           <nav className={`nav ${isMobileMenuOpen ? 'nav-open' : ''}`}>
@@ -48,7 +50,7 @@ const Header = () => {
               <Search size={22} />
             </button>
             <Link to="/account" className="icon-btn" aria-label="Account">
-              <User size={22} />
+              {user ? <UserCheck size={22} className="user-logged-in" /> : <User size={22} />}
             </Link>
             <Link to="/cart" className={`icon-btn cart-btn ${isAnimating ? 'cart-pop' : ''}`} aria-label="Cart">
               <ShoppingCart size={22} />

@@ -11,7 +11,7 @@ const ProductDetail = () => {
   const [qty, setQty] = useState(1);
   const [currentImg, setCurrentImg] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, clearCart } = useCart();
   const navigate = useNavigate();
 
   // Touch swipe refs
@@ -215,6 +215,7 @@ const ProductDetail = () => {
               <button 
                 className="btn btn-accent w-100"
                 onClick={() => {
+                  clearCart();
                   addToCart(product, qty);
                   navigate('/checkout/address');
                 }}

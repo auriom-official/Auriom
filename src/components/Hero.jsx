@@ -3,18 +3,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import './Hero.css';
 
-const fallbackSlides = [
-  {
-    id: 1,
-    img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=1920&h=800',
-    link: '/shop',
-  },
-  {
-    id: 2,
-    img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1920&h=800',
-    link: '/shop',
-  }
-];
+const fallbackSlides = [];
 
 const Hero = () => {
   const { banners } = useData();

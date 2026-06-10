@@ -17,7 +17,7 @@ const exploreSections = [
   },
   {
     title: 'Smart Watch Collection',
-    bg: '../assets/explore/swp.jpeg',
+    bg: 'https://cdn.corenexis.com/files/c/6498362720.jpg',
     link: '/shop?category=Smart Watches',
     cta: 'Explore Watches',
   },

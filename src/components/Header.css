@@ -32,9 +32,19 @@
 .logo a {
   font-size: var(--font-size-xl);
   font-weight: 900;
-  color: var(--primary-purple);
   letter-spacing: -1px;
-  text-shadow: var(--shadow-glow-purple);
+}
+.logo a.logo-other {
+  color: #000000;
+  text-shadow: none;
+}
+.logo a.logo-home {
+  background: linear-gradient(135deg, var(--primary-purple), var(--accent-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
 .nav {
@@ -101,6 +111,10 @@
   color: var(--primary-purple);
   transform: scale(1.1);
   filter: drop-shadow(0 0 8px rgba(109, 74, 255, 0.6));
+}
+
+.user-logged-in {
+  color: var(--accent-teal);
 }
 
 .cart-btn {
