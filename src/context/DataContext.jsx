@@ -108,6 +108,47 @@ export const DataProvider = ({ children }) => {
 
   const logout = () => setUser(null);
 
+  const googleLogin = async (credentialResponse) => {
+    // Decode the JWT credential from Google
+    const decoded = JSON.parse(atob(credentialResponse.credential.split('.')[1]));
+    const { email, name, picture, sub: googleId } = decoded;
+
+    // Check if user already exists
+    const { data: existingUser, error: checkErr } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (checkErr) throw new Error('Google login failed: ' + checkErr.message);
+
+    if (existingUser) {
+      // Existing user — log them in
+      if (existingUser.status && existingUser.status !== 'Active') {
+        throw new Error('Account is inactive. Please contact support.');
+      }
+      setUser(existingUser);
+      return existingUser;
+    }
+
+    // New user — create account
+    const { data: newUser, error: insertErr } = await supabase.from('users').insert([{
+      name: name || 'Google User',
+      email,
+      phone: '',
+      password: `google_${googleId}`,
+      role: 'Customer',
+      status: 'Active',
+      is_admin: false,
+      addresses: [],
+      avatar: picture || ''
+    }]).select().single();
+
+    if (insertErr) throw new Error('Failed to create account: ' + insertErr.message);
+    setUser(newUser);
+    return newUser;
+  };
+
   const updateUserProfile = async (updates) => {
     if (!user) return;
     const { data, error } = await supabase
@@ -174,7 +215,7 @@ export const DataProvider = ({ children }) => {
   return (
     <DataContext.Provider value={{
       products, categories, coupons, banners, loading,
-      user, login, signup, logout, updateUserProfile, addAddress, deleteAddress, createOrder
+      user, login, signup, logout, googleLogin, updateUserProfile, addAddress, deleteAddress, createOrder
     }}>
       {children}
     </DataContext.Provider>
