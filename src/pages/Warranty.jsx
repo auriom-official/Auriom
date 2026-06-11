@@ -12,12 +12,20 @@ const Warranty = () => (
     </div>
     <div className="info-content">
       <div className="info-section">
-        <h2>Disclaimer of Liability</h2>
+        <h2>Warranty Policy & Coverage</h2>
         <p style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>
-          Please note: AURIOM acts solely as an authorized retailer and reseller of the products listed on our platform. We do not manufacture these items and therefore do not provide direct warranty coverage or repairs.
+          At AURIOM, we offer a diverse range of products, and the warranty coverage depends on the origin of the item you purchased:
         </p>
+        <ul style={{ lineHeight: 1.7, margin: '16px 0', paddingLeft: '20px' }}>
+          <li style={{ marginBottom: '12px' }}>
+            <strong>AURIOM Original Products:</strong> Products manufactured directly by us carry an official AURIOM warranty. For these items, we provide comprehensive, direct support, repairs, and replacements through our dedicated service channels.
+          </li>
+          <li>
+            <strong>Third-Party Brand Products:</strong> For products from other partner brands sold on our platform, AURIOM acts purely as an authorized reseller. <strong>We do not handle warranty claims or repairs for third-party items.</strong> All technical support, claims, and repair requests for these products must be directed exclusively to the respective brand's authorized service centers.
+          </li>
+        </ul>
         <p>
-          All warranty claims, repairs, and technical support requests must be directed to the respective brand's authorized service centers. AURIOM is not responsible for fulfilling warranty obligations or arranging repairs on behalf of the manufacturer.
+          Please ensure you verify whether your product is an AURIOM original or a third-party item before initiating a claim to ensure a smooth resolution process.
         </p>
       </div>
 

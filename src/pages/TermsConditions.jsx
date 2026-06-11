@@ -69,8 +69,8 @@ const TermsConditions = () => (
         <h2>9. Contact</h2>
         <div className="info-grid">
           {[
-            {icon:'📧', title:'Legal Queries', val:'legal@auriom.com'},
-            {icon:'🏢', title:'Registered Office', val:'AURIOM Technologies Pvt. Ltd., Tech Park, Whitefield, Bangalore 560066'},
+            {icon:'📧', title:'Legal Queries', val:'support@auriom.in'},
+            {icon:'🏢', title:'Registered Office', val:'AURIOM, India'},
           ].map(c => (
             <div className="info-contact-block" key={c.title}>
               <div className="icon">{c.icon}</div>

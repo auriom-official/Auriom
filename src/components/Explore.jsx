@@ -5,7 +5,7 @@ import './Explore.css';
 const exploreSections = [
   {
     title: 'Explore Bestsellers',
-    bg: 'https://tse2.mm.bing.net/th/id/OIP.7f3gFCompEKlNKLlJjLRdwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3',
+    bg: 'https://wallpaperaccess.com/full/3507498.jpg',
     link: '/bestsellers',
     cta: 'Shop Bestsellers',
   },

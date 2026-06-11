@@ -94,8 +94,8 @@ const PrivacyPolicy = () => (
         <h2>8. Contact</h2>
         <div className="info-grid">
           {[
-            {icon:'📧', title:'Privacy Officer', val:'privacy@auriom.com'},
-            {icon:'📞', title:'Helpline', val:'1800-123-AURIOM'},
+            {icon:'📧', title:'Privacy Officer', val:'support@auriom.in'},
+            {icon:'📞', title:'Helpline', val:'Not-Available'},
           ].map(c => (
             <div className="info-contact-block" key={c.title}>
               <div className="icon">{c.icon}</div>

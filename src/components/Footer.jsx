@@ -37,7 +37,8 @@ const Footer = () => {
               <li><Link to="/track-order">Track Your Order</Link></li>
               <li><Link to="/warranty">Warranty & Support</Link></li>
               <li><Link to="/return-policy">Return Policy</Link></li>
-              {/* <li><Link to="/service-centers">Service Centers</Link></li> */}
+              <li><Link to="/terms">Terms & Conditions</Link></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
             </ul>
           </div>
 

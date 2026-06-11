@@ -68,17 +68,6 @@ const Bestsellers = () => {
               <div className="product-playback">{product.playback}</div>
               <div className="product-img-wrapper">
                 <img src={product.img} alt={product.name} className="product-img" loading="lazy" />
-                <button 
-                  className="quick-add-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    addToCart(product);
-                  }}
-                  aria-label="Add to cart"
-                >
-                  <ShoppingCart size={20} color="white" />
-                </button>
               </div>
               <div className="product-info">
                 <h3 className="product-title">{product.name}</h3>

@@ -15,15 +15,15 @@ const AboutPage = () => (
 
       <div className="info-section">
         <h2>Our Story</h2>
-        <p>From a very young age, our founder was deeply fascinated by technology and the power of entrepreneurship. Driven by a constant excitement for innovative smart gadgets and the vision of building products from the ground up, he pursued this passion relentlessly. After gaining profound experience in the tech sector and launching multiple successful ventures, he sought to create a brand that could make cutting-edge innovation a standard for every consumer. The ultimate culmination of this visionary journey was AURIOM — a leading smart gadgets brand designed to elevate your everyday lifestyle with futuristic electronics.</p>
-        <p>Today, AURIOM serves a rapidly growing community of active gadget enthusiasts, providing them with top-tier gadgets engineered to excel in everyday situations — whether you're working, traveling, playing, or staying healthy.</p>
+        <p>AURIOM wasn't born in a boardroom; it was born out of a genuine frustration with the status quo. Our founder, an avid tech enthusiast and serial entrepreneur, realized that the smart gadget market was polarized: either you paid exorbitant prices for premium design, or settled for cheap, uninspired plastic that broke in a month. Driven by an obsession with hardware innovation, they set out to bridge this gap.</p>
+        <p>We started in a small workshop with a simple vision: democratize premium technology. After hundreds of prototypes, sleepless nights, and direct feedback from early adopters, AURIOM launched its first flagship product. The response was overwhelming. Today, AURIOM is more than just a brand; it's a movement of tech-forward thinkers who demand more from their devices. From wireless audio to smart wearables, our products are meticulously crafted to blend seamlessly into your life while delivering uncompromising performance.</p>
       </div>
 
       <div className="info-section">
         <h2>Our Mission</h2>
         <div className="info-card">
           <h3>🎯 Empower Daily Lives through Intelligent Technology</h3>
-          <p>Our mission is to integrate next-generation smart technology seamlessly into daily lifestyles. We strive to design and deliver high-performance, durable, and intuitive gadgets that foster productivity, connection, and growth — ensuring that premium, future-ready innovation is within everyone's reach.</p>
+          <p>Our mission is simple yet profound: to make the future accessible today. We believe that cutting-edge technology shouldn't be a luxury reserved for the few, but a standard enjoyed by the many. We are committed to pushing the boundaries of what's possible, engineering intelligent, beautiful, and highly functional gadgets that elevate every aspect of your daily routine. At AURIOM, we don't just build products; we engineer experiences that inspire.</p>
         </div>
       </div>
 

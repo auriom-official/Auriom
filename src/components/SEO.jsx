@@ -3,31 +3,31 @@ import { useLocation } from 'react-router-dom';
 
 const seoData = {
   default: {
-    title: "AURIOM - India's #1 Smart Gadgets & Premium Audio Brand | TWS Earbuds, Smart Watches, Bluetooth Speakers",
-    description: "AURIOM is India's fastest-growing smart gadgets and premium audio brand. Shop TWS earbuds, smart watches, Bluetooth speakers, neckbands, ANC headphones, gaming earbuds, wireless chargers, power banks, and tech accessories. Free shipping, 1-year warranty, COD available.",
-    keywords: "auriom, auriom india, auriom official, auriom.in, gadgets, smart gadgets, tech brand, earbuds, headphones, true wireless, smart watches, bluetooth speakers, wireless earphones, tech accessories, audio gear, mobile accessories, premium gadgets, smart technology, neckband, tws earbuds, anc headphones, gaming earbuds, wireless charger, power bank, best earbuds india, best smart watch india, best bluetooth speaker india, buy gadgets online india, free shipping gadgets, cod gadgets, 1 year warranty, auriom earbuds review, auriom smart watch review, best earbuds under 2000, best smart watch under 3000, best neckband under 1000, best speaker under 2000, gaming earbuds india, noise cancelling earbuds, waterproof earbuds, long battery earbuds, bluetooth 5.3 earbuds, amoled smart watch, calling smart watch, fitness tracker, health watch, portable speaker, party speaker, bass speaker",
+    title: "AURIOM - India's #1 Ultimate Gadgets Brand | Smart Watches, Bluetooth Speakers, Tech Accessories",
+    description: "AURIOM is India's fastest-growing ultimate gadgets brand. Shop smart watches, Bluetooth speakers, wireless chargers, power banks, and premium tech accessories. Free shipping, 1-year warranty, COD available.",
+    keywords: "auriom, auriom india, auriom official, auriom.in, ultimate gadgets, gadgets, smart gadgets, tech brand, smart watches, bluetooth speakers, tech accessories, mobile accessories, premium gadgets, smart technology, wireless charger, power bank, best smart watch india, best bluetooth speaker india, buy gadgets online india, free shipping gadgets, cod gadgets, 1 year warranty, auriom smart watch review, best smart watch under 3000, best speaker under 2000, amoled smart watch, calling smart watch, fitness tracker, health watch, portable speaker, party speaker, bass speaker",
     url: "https://www.auriom.in",
     image: "https://www.auriom.in/assets/auriom.png"
   },
   shop: {
-    title: "Shop All Smart Gadgets, TWS Earbuds, Smart Watches & Audio Gear | AURIOM India",
-    description: "Explore AURIOM's wide range of premium smart gadgets including True Wireless Earbuds, Smart Watches, Bluetooth Speakers, Neckband Earphones, ANC Headphones, and tech accessories. Best prices, free shipping, COD available across India.",
-    keywords: "shop gadgets online, auriom shop, buy earbuds online, buy smart watch online, buy bluetooth speaker, buy neckband online, buy headphones online, online gadget store india, online electronics store, smart gadgets shop, audio gear shop, tech accessories shop, best deals gadgets, discount earbuds, discount smart watch, sale earbuds, sale gadgets, auriom products, auriom collection, auriom store, all products, shop all, browse gadgets, explore gadgets, filter by category, sort by price, earbuds collection, headphones collection, smart watch collection, speaker collection, neckband collection, accessories collection, new arrivals, trending products, popular gadgets, top rated products, featured products, best price guarantee",
+    title: "Shop All Ultimate Gadgets, Smart Watches & Tech Accessories | AURIOM India",
+    description: "Explore AURIOM's wide range of premium ultimate gadgets including Smart Watches, Bluetooth Speakers, and tech accessories. Best prices, free shipping, COD available across India.",
+    keywords: "shop gadgets online, auriom shop, buy smart watch online, buy bluetooth speaker, online gadget store india, online electronics store, smart gadgets shop, tech accessories shop, best deals gadgets, discount smart watch, sale gadgets, auriom products, auriom collection, auriom store, all products, shop all, browse gadgets, explore gadgets, filter by category, sort by price, smart watch collection, speaker collection, accessories collection, new arrivals, trending products, popular gadgets, top rated products, featured products, best price guarantee",
   },
   bestsellers: {
-    title: "Top Rated Bestsellers - Most Loved Gadgets & Audio Products | AURIOM",
-    description: "Discover AURIOM's most popular and highest-rated smart gadgets. Shop our bestselling TWS earbuds, smart watches, Bluetooth speakers, and neckbands. Trusted by thousands of happy customers across India.",
-    keywords: "auriom bestsellers, top rated gadgets, best earphones india, top smart watches, trending tech, best tech gifts, popular earbuds, highest rated bluetooth speakers, auriom top products, most sold earbuds, most popular smart watch, best selling neckband, best selling speaker, customer favorite gadgets, trending gadgets 2026, most reviewed earbuds, 5 star rated gadgets, top picks, staff favorites, editor choice, award winning gadgets, must have gadgets, best value gadgets, fan favorite, community pick, top 10 earbuds, top 10 smart watch, top 10 speaker",
+    title: "Top Rated Bestsellers - Most Loved Gadgets & Tech Accessories | AURIOM",
+    description: "Discover AURIOM's most popular and highest-rated ultimate gadgets. Shop our bestselling smart watches, Bluetooth speakers, and accessories. Trusted by thousands of happy customers across India.",
+    keywords: "auriom bestsellers, top rated gadgets, top smart watches, trending tech, best tech gifts, highest rated bluetooth speakers, auriom top products, most popular smart watch, best selling speaker, customer favorite gadgets, trending gadgets 2026, 5 star rated gadgets, top picks, staff favorites, editor choice, award winning gadgets, must have gadgets, best value gadgets, fan favorite, community pick, top 10 smart watch, top 10 speaker",
   },
   newLaunches: {
-    title: "New Launches - Latest Tech & Audio Gadgets 2026 | AURIOM",
-    description: "Be the first to own AURIOM's latest audio gadgets and smart wearables. Explore the newest, most innovative tech releases including next-gen TWS earbuds, smart watches with calling, and powerful Bluetooth speakers.",
-    keywords: "new gadgets 2026, latest auriom products, new earbuds launch, latest smart watches, upcoming tech accessories, innovative audio gear, auriom new releases, freshly launched gadgets, just launched, new arrival, coming soon, pre order, new earbuds 2026, new smart watch 2026, new speaker 2026, new neckband 2026, latest tech india, newest gadgets, fresh stock, just in, brand new, recently launched, first to market, exclusive launch, early access, new collection 2026",
+    title: "New Launches - Latest Ultimate Gadgets 2026 | AURIOM",
+    description: "Be the first to own AURIOM's latest tech gadgets and smart wearables. Explore the newest, most innovative tech releases including smart watches with calling, and powerful Bluetooth speakers.",
+    keywords: "new gadgets 2026, latest auriom products, latest smart watches, upcoming tech accessories, innovative gear, auriom new releases, freshly launched gadgets, just launched, new arrival, coming soon, pre order, new smart watch 2026, new speaker 2026, latest tech india, newest gadgets, fresh stock, just in, brand new, recently launched, first to market, exclusive launch, early access, new collection 2026",
   },
   about: {
-    title: "About AURIOM - India's Fastest-Growing Smart Tech & Audio Brand",
-    description: "Learn about AURIOM, India's fastest-growing smart tech brand. We engineer premium audio devices and wearables combining stunning design with cutting-edge technology. Our mission is to make world-class tech accessible to everyone.",
-    keywords: "about auriom, auriom brand story, auriom history, indian tech startup, premium audio brand, smart wearables company, tech innovators india, auriom mission, auriom vision, auriom values, who is auriom, auriom founder, auriom team, auriom journey, made in india brand, indian gadget company, auriom quality, auriom design philosophy, sound of the future, auriom manufacturing, auriom innovation, auriom technology, auriom R&D",
+    title: "About AURIOM - India's Fastest-Growing Ultimate Tech Brand",
+    description: "Learn about AURIOM, India's fastest-growing smart tech brand. We engineer premium devices and wearables combining stunning design with cutting-edge technology. Our mission is to make world-class tech accessible to everyone.",
+    keywords: "about auriom, auriom brand story, auriom history, indian tech startup, ultimate gadgets brand, smart wearables company, tech innovators india, auriom mission, auriom vision, auriom values, who is auriom, auriom founder, auriom team, auriom journey, made in india brand, indian gadget company, auriom quality, auriom design philosophy, tech of the future, auriom manufacturing, auriom innovation, auriom technology, auriom R&D",
   },
   contact: {
     title: "Contact AURIOM - Customer Support & Assistance | AURIOM India",
@@ -56,13 +56,13 @@ const seoData = {
   },
   corporateGifting: {
     title: "Corporate Gifting Solutions - Premium Tech Gifts | AURIOM",
-    description: "Explore AURIOM's corporate gifting solutions. Premium earbuds, smart watches, and speakers perfect for employee gifts, client appreciation, and festive gifting. Bulk discounts available.",
+    description: "Explore AURIOM's corporate gifting solutions. Premium smart watches and speakers perfect for employee gifts, client appreciation, and festive gifting. Bulk discounts available.",
     keywords: "corporate gifting, corporate gifts, bulk order, employee gifts, client gifts, business gifts, premium gifts, tech gifts, gadget gifts, festive gifts, diwali corporate gifts, christmas corporate gifts, auriom bulk order, auriom corporate, branded gifts, custom gifts, engraved gifts, gift hamper, gift set, gift combo, corporate discount, wholesale gadgets",
   },
   blog: {
     title: "Tech Blog - Latest Gadget News & Reviews | AURIOM",
-    description: "Read the latest tech news, gadget reviews, buying guides, and audio tips on the AURIOM blog. Stay updated with the newest technology trends.",
-    keywords: "tech blog, gadget blog, earbuds review, smart watch review, speaker review, buying guide, tech news, audio tips, technology trends, gadget comparison, best of 2026, tech guide, product review, unboxing, hands on review",
+    description: "Read the latest tech news, gadget reviews, buying guides, and tech tips on the AURIOM blog. Stay updated with the newest technology trends.",
+    keywords: "tech blog, gadget blog, smart watch review, speaker review, buying guide, tech news, tech tips, technology trends, gadget comparison, best of 2026, tech guide, product review, unboxing, hands on review",
   },
   news: {
     title: "Latest News & Announcements | AURIOM India",
