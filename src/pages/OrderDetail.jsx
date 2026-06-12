@@ -200,6 +200,30 @@ const OrderDetail = () => {
     printWindow.document.close();
   };
 
+  const isWithin24Hours = order ? (new Date() - new Date(order.created_at)) < 24 * 60 * 60 * 1000 : false;
+
+  const handleCancelOrder = async () => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+    
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: 'Cancelled' })
+        .eq('id', order.id);
+        
+      if (error) throw new Error(error.message);
+      
+      setOrder({...order, status: 'Cancelled'});
+      alert("Order cancelled successfully.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to cancel order: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -243,9 +267,28 @@ const OrderDetail = () => {
               Order ID: <strong style={{ color: 'var(--text-primary)' }}>#{order.id}</strong>
             </p>
           </div>
-          <button onClick={handleDownloadInvoice} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13px', whiteSpace: 'nowrap' }}>
-            <Download size={15} /> Download Invoice
-          </button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {(!isCancelled && !isCompleted) && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                <button 
+                  onClick={handleCancelOrder} 
+                  className="btn btn-danger" 
+                  style={{ padding: '10px 18px', fontSize: '13px', whiteSpace: 'nowrap' }}
+                  disabled={!isWithin24Hours}
+                >
+                  Cancel Order
+                </button>
+                {!isWithin24Hours && (
+                  <span style={{ fontSize: '11px', color: 'var(--danger)', maxWidth: '250px', textAlign: 'right' }}>
+                    No cancellation request after 24 hrs. For more enquiry email us on support@auriom.in
+                  </span>
+                )}
+              </div>
+            )}
+            <button onClick={handleDownloadInvoice} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '13px', whiteSpace: 'nowrap', alignSelf: 'flex-start' }}>
+              <Download size={15} /> Download Invoice
+            </button>
+          </div>
         </div>
 
         {/* 1. Delivery Progress */}

@@ -45,9 +45,9 @@ const Chatbot = () => {
       else if (text.toLowerCase().includes("order") && !text.toLowerCase().includes("cancel")) reply = "You can track your order in the 'Orders' section of your account.";
       else if (text.toLowerCase().includes("return")) reply = "Our return policy allows returns within 2 days of delivery. Check the Return Policy page for details.";
       else if (text.toLowerCase().includes("sales")) reply = "Check out our 'New Launches' and 'Bestsellers' sections for the latest discounts!";
-      else if (text.toLowerCase().includes("warranty")) reply = "All our products come with a 1-year warranty. Visit the Warranty page to register your product or claim a replacement.";
+      else if (text.toLowerCase().includes("warranty")) reply = "Our products come with warranty as per our warranty policy. Check the Warranty page for details.";
       else if (text.toLowerCase().includes("cancel")) reply = "You can cancel your order within 24 hours of placing it from the 'Orders' section in your account.";
-      else if (text.toLowerCase().includes("payment")) reply = "We accept all major credit/debit cards, UPI, Net Banking, and Cash on Delivery (COD).";
+      else if (text.toLowerCase().includes("payment")) reply = "We accept all major credit/debit cards, UPI, and Net Banking. COD not available.";
       
       // Send bot reply and show options again
       setMessages(prev => [

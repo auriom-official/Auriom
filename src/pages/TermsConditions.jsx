@@ -14,7 +14,7 @@ const TermsConditions = () => (
 
       <div className="info-section">
         <h2>1. Acceptance of Terms</h2>
-        <p>By accessing or using the AURIOM website (auriom.com), mobile application, or purchasing any AURIOM product, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, please do not use our services.</p>
+        <p>By accessing or using the AURIOM website (auriom.in), mobile application, or purchasing any AURIOM product, you agree to be bound by these Terms & Conditions. If you do not agree to these terms, please do not use our services.</p>
         <p>AURIOM reserves the right to update these terms at any time. Continued use of our website after such changes constitutes acceptance of the revised terms.</p>
       </div>
 

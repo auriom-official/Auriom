@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -16,7 +16,7 @@ const Cart = () => {
   const [couponError, setCouponError] = useState('');
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal > 499 ? 0 : 50;
+  const shipping = subtotal > 499 ? 0 : 99;
   
   const handleApplyCoupon = () => {
     const coupon = coupons.find(c => c.code.toUpperCase() === couponCode.toUpperCase() && c.status === 'Active');
@@ -24,6 +24,13 @@ const Cart = () => {
     if (coupon) {
       if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
         setCouponError('This coupon has expired.');
+        setDiscount(0);
+        setCouponApplied(false);
+        return;
+      }
+
+      if (coupon.min_order_value && subtotal < parseFloat(coupon.min_order_value)) {
+        setCouponError(`Minimum order value for this coupon is ₹${coupon.min_order_value}.`);
         setDiscount(0);
         setCouponApplied(false);
         return;
@@ -50,8 +57,67 @@ const Cart = () => {
       setCouponError('Invalid or expired coupon code.');
       setDiscount(0);
       setCouponApplied(false);
+      localStorage.removeItem('auriom_discount_amt');
+      localStorage.removeItem('auriom_applied_coupon');
     }
   };
+
+  // Re-evaluate coupon when subtotal changes or on initial load
+  useEffect(() => {
+    const savedCouponCode = localStorage.getItem('auriom_applied_coupon');
+    if (savedCouponCode && coupons.length > 0) {
+      const coupon = coupons.find(c => c.code.toUpperCase() === savedCouponCode.toUpperCase() && c.status === 'Active');
+      if (coupon) {
+        if (coupon.expiry && new Date(coupon.expiry) < new Date()) {
+          setDiscount(0);
+          setCouponApplied(false);
+          setCouponCode('');
+          localStorage.removeItem('auriom_discount_amt');
+          localStorage.removeItem('auriom_applied_coupon');
+        } else if (coupon.min_order_value && subtotal < parseFloat(coupon.min_order_value)) {
+          // No longer valid due to subtotal drop
+          setDiscount(0);
+          setCouponApplied(false);
+          setCouponCode('');
+          setCouponError(`Minimum order value for ${coupon.code} is ₹${coupon.min_order_value}.`);
+          localStorage.removeItem('auriom_discount_amt');
+          localStorage.removeItem('auriom_applied_coupon');
+        } else {
+          // Still valid, recalculate discount in case subtotal changed
+          let discountAmt = 0;
+          const discountValStr = coupon.discount.toString().trim();
+          
+          if (discountValStr.endsWith('%')) {
+            const percent = parseFloat(discountValStr.replace('%', ''));
+            discountAmt = subtotal * (percent / 100);
+          } else {
+            const flatVal = parseFloat(discountValStr.replace(/[^0-9.]/g, ''));
+            discountAmt = Math.min(flatVal, subtotal);
+          }
+          
+          setDiscount(discountAmt);
+          setCouponApplied(true);
+          setCouponCode(coupon.code);
+          // Only clear error if it was a min order error from previous check
+          if (couponError.includes('Minimum order value')) {
+            setCouponError('');
+          }
+          localStorage.setItem('auriom_discount_amt', discountAmt.toString());
+        }
+      } else {
+        setDiscount(0);
+        setCouponApplied(false);
+        setCouponCode('');
+        localStorage.removeItem('auriom_discount_amt');
+        localStorage.removeItem('auriom_applied_coupon');
+      }
+    } else if (cartCount === 0 || subtotal === 0) {
+      setDiscount(0);
+      setCouponApplied(false);
+      localStorage.removeItem('auriom_discount_amt');
+      localStorage.removeItem('auriom_applied_coupon');
+    }
+  }, [subtotal, coupons]);
 
   const total = subtotal + shipping - discount;
 

@@ -162,7 +162,7 @@ const ProductDetail = () => {
 
           {/* Info Section */}
           <div className="pd-info-section">
-            {product.tag && <span className="pd-tag">{product.tag}</span>}
+            {product.tag?.trim() && <span className="pd-tag">{product.tag}</span>}
             <h1 className="pd-name">{product.name}</h1>
             <div className="pd-rating">
               <span className="pd-stars">{'★'.repeat(starsCount)}{'☆'.repeat(5 - starsCount)}</span>
@@ -208,15 +208,27 @@ const ProductDetail = () => {
             <div className="pd-actions">
               <button 
                 className="btn btn-primary w-100"
-                onClick={() => addToCart(product, qty)}
+                onClick={() => {
+                  const customizedProduct = {
+                    ...product,
+                    id: colors.length > 0 ? `${product.id}-${colors[selectedColor]}` : product.id,
+                    name: colors.length > 0 ? `${product.name} (${colors[selectedColor]})` : product.name
+                  };
+                  addToCart(customizedProduct, qty);
+                }}
               >
                 Add to Cart
               </button>
               <button 
                 className="btn btn-accent w-100"
                 onClick={() => {
+                  const customizedProduct = {
+                    ...product,
+                    id: colors.length > 0 ? `${product.id}-${colors[selectedColor]}` : product.id,
+                    name: colors.length > 0 ? `${product.name} (${colors[selectedColor]})` : product.name
+                  };
                   clearCart();
-                  addToCart(product, qty);
+                  addToCart(customizedProduct, qty);
                   navigate('/checkout/address');
                 }}
               >
@@ -251,21 +263,10 @@ const ProductDetail = () => {
             <div className="pd-related-grid">
               {related.map(rp => (
                 <Link to={`/product/${rp.id}`} className="product-card" key={rp.id}>
-                  {rp.tag && <div className="product-tag">{rp.tag}</div>}
-                  {rp.playback && <div className="product-playback">{rp.playback}</div>}
+                  {rp.tag?.trim() && <div className="product-tag">{rp.tag}</div>}
+                  {rp.playback?.trim() && <div className="product-playback">{rp.playback}</div>}
                   <div className="product-img-wrapper">
                     <img src={rp.img} alt={rp.name} className="product-img" loading="lazy" />
-                    <button 
-                      className="quick-add-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart(rp);
-                      }}
-                      aria-label="Add to cart"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    </button>
                   </div>
                   <div className="product-info">
                     <h3 className="product-title">{rp.name}</h3>

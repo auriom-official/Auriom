@@ -64,8 +64,8 @@ const Bestsellers = () => {
         <div className="products-grid">
           {shuffledBestsellers.map(product => (
             <Link to={`/product/${product.id}`} className="product-card" key={product.id}>
-              {product.tag && <div className="product-tag">{product.tag}</div>}
-              <div className="product-playback">{product.playback}</div>
+              {product.tag?.trim() && <div className="product-tag">{product.tag}</div>}
+              {product.playback?.trim() && <div className="product-playback">{product.playback}</div>}
               <div className="product-img-wrapper">
                 <img src={product.img} alt={product.name} className="product-img" loading="lazy" />
               </div>

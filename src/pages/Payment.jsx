@@ -25,12 +25,12 @@ const Payment = () => {
 
     const calcSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     setSubtotal(calcSubtotal);
-    setShipping(calcSubtotal > 499 ? 0 : 50);
+    setShipping(calcSubtotal > 499 ? 0 : 99);
 
     const discAmt = parseFloat(localStorage.getItem('auriom_discount_amt') || 0);
     setDiscount(discAmt);
 
-    setTotal(calcSubtotal + (calcSubtotal > 499 ? 0 : 50) - discAmt);
+    setTotal(calcSubtotal + (calcSubtotal > 499 ? 0 : 99) - discAmt);
   }, [cart]);
 
   const loadRazorpayScript = () => {
@@ -83,8 +83,7 @@ const Payment = () => {
         status: 'Pending'
       };
 
-      // 4. Save to Database as Pending
-      await createOrder(orderData, paymentData);
+      // 4. Removed early save to Database (now only saved on success)
 
       // 5. Open Razorpay Checkout
       const options = {
@@ -95,16 +94,17 @@ const Payment = () => {
         description: "Order " + orderId,
         handler: async function (response) {
           try {
-            const { supabase } = await import('../supabase');
-            await supabase.from('orders').update({
+            const finalOrderData = {
+              ...orderData,
               status: 'Processing',
               payment: 'Online Payment (Success)'
-            }).eq('id', orderId);
-
-            await supabase.from('payments').update({
+            };
+            const finalPaymentData = {
+              ...paymentData,
               status: 'Success',
               txn_id: response.razorpay_payment_id || txnId
-            }).eq('order_id', orderId);
+            };
+            await createOrder(finalOrderData, finalPaymentData);
 
             clearCart();
             localStorage.removeItem('auriom_discount_amt');

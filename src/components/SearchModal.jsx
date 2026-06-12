@@ -47,12 +47,45 @@ const SearchModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const results = query.length > 0
-    ? products.filter(p =>
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.category.toLowerCase().includes(query.toLowerCase())
-      )
+  const getRelevanceScore = (p, q) => {
+    if (!q) return 0;
+    const query = q.toLowerCase().trim();
+    const words = query.split(/\s+/);
+    let score = 0;
+    
+    // Exact match in name
+    if (p.name && p.name.toLowerCase() === query) score += 20;
+    
+    // Contains full query
+    if (p.name && p.name.toLowerCase().includes(query)) score += 10;
+    if (p.category && p.category.toLowerCase().includes(query)) score += 8;
+    if (p.tag && p.tag.toLowerCase().includes(query)) score += 5;
+    
+    // Word matches
+    words.forEach(word => {
+      if (p.name && p.name.toLowerCase().includes(word)) score += 3;
+      if (p.category && p.category.toLowerCase().includes(word)) score += 2;
+      if (p.tags && Array.isArray(p.tags) && p.tags.some(t => t.toLowerCase().includes(word))) score += 2;
+      if (p.features && Array.isArray(p.features) && p.features.some(f => f.toLowerCase().includes(word))) score += 1;
+      if (p.description && p.description.toLowerCase().includes(word)) score += 1;
+    });
+
+    return score;
+  };
+
+  const results = query.trim().length > 0
+    ? products
+        .map(p => ({ product: p, score: getRelevanceScore(p, query) }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product)
+        .slice(0, 8) // Limit to top 8
     : [];
+
+  // Fallback suggestions (Bestsellers or highly rated)
+  const fallbackSuggestions = products
+    .filter(p => p.tag && p.tag.toLowerCase().includes("best seller"))
+    .slice(0, 4);
 
   if (!isOpen) return null;
 
@@ -75,7 +108,26 @@ const SearchModal = ({ isOpen, onClose }) => {
         {query.length > 0 && (
           <div className="search-results">
             {results.length === 0 ? (
-              <p className="search-no-results">No products found for "{query}"</p>
+              <div className="search-no-results">
+                <p>No exact matches found for "{query}".</p>
+                <div style={{ marginTop: '20px', textAlign: 'left' }}>
+                  <p className="search-suggestion-title">You might like these Best Sellers:</p>
+                  {fallbackSuggestions.map(p => (
+                    <Link 
+                      to={`/product/${p.id}`} 
+                      key={p.id} 
+                      className="search-result-item" 
+                      onClick={() => { saveSearch(query); onClose(); }}
+                    >
+                      <img src={p.img} alt={p.name} className="search-result-img" />
+                      <div>
+                        <p className="search-result-name">{p.name}</p>
+                        <p className="search-result-price">₹{(p.price ?? 0).toLocaleString()}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ) : (
               results.map(p => (
                 <Link 
@@ -149,6 +201,25 @@ const SearchModal = ({ isOpen, onClose }) => {
                 >
                   {t}
                 </button>
+              ))}
+            </div>
+
+            <div style={{ marginTop: '30px' }}>
+              <p className="search-suggestion-title">Recommended for You</p>
+              {fallbackSuggestions.map(p => (
+                <Link 
+                  to={`/product/${p.id}`} 
+                  key={p.id} 
+                  className="search-result-item" 
+                  onClick={onClose}
+                  style={{ padding: '8px 0', border: 'none' }}
+                >
+                  <img src={p.img} alt={p.name} className="search-result-img" />
+                  <div>
+                    <p className="search-result-name">{p.name}</p>
+                    <p className="search-result-price">₹{(p.price ?? 0).toLocaleString()}</p>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>

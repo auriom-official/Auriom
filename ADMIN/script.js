@@ -708,6 +708,8 @@ function renderOrders(filter = '') {
                 <td>${statusSelect}</td>
                 <td class="action-btns">
                     <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="viewOrder('${o.id}')">View</button>
+                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="editOrder('${o.id}')">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="deleteOrder('${o.id}')">Delete</button>
                 </td>
             </tr>
         `;
@@ -738,6 +740,9 @@ function renderPayments(filter = '') {
                 <td>₹${parseFloat(p.amount || 0).toLocaleString()}</td>
                 <td>${dateStr}</td>
                 <td><span class="${statusClass}">${p.status || 'N/A'}</span></td>
+                <td class="action-btns">
+                    <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="deletePayment('${p.txn_id}')">Delete</button>
+                </td>
             </tr>
         `;
     });
@@ -889,7 +894,19 @@ window.editCoupon = function(id) {
     document.getElementById('cpf_discount').value = c.discount || '';
     document.getElementById('cpf_expiry').value = c.expiry || '';
     document.getElementById('cpf_limit').value = c.limit_count === 'Unlimited' ? '' : (c.limit_count || '');
+    document.getElementById('cpf_min_order').value = c.min_order_value || '';
     openModal('couponModal');
+};
+
+window.editOrder = function(id) {
+    const o = orders.find(x => String(x.id) === String(id));
+    if (!o) return;
+    document.getElementById('e_order_id').value = o.id;
+    document.getElementById('e_order_customer').value = o.customer || '';
+    document.getElementById('e_order_phone').value = o.phone || '';
+    document.getElementById('e_order_address').value = o.address || '';
+    document.getElementById('e_order_status').value = o.status || 'Pending';
+    openModal('orderEditModal');
 };
 
 window.editTag = function(id) {
@@ -1091,6 +1108,20 @@ window.generatePackingSlipHTML = function(orderList) {
 // ============================================
 // DELETE HANDLERS
 // ============================================
+window.deleteOrder = async function(id) {
+    if (!confirm('Delete this order?')) return;
+    const { error } = await db.from('orders').delete().eq('id', id);
+    if (!error) { orders = await fetchTable('orders'); renderOrders(); updateDashboardStats(); }
+    else alert('Failed: ' + error.message);
+};
+
+window.deletePayment = async function(txn_id) {
+    if (!confirm('Delete this payment?')) return;
+    const { error } = await db.from('payments').delete().eq('txn_id', txn_id);
+    if (!error) { payments = await fetchTable('payments'); renderPayments(); updateDashboardStats(); }
+    else alert('Failed: ' + error.message);
+};
+
 window.deleteUser = async function(id) {
     if (!confirm('Delete this user?')) return;
     const { error } = await db.from('users').delete().eq('id', id);
@@ -1282,6 +1313,7 @@ function setupFormHandlers() {
             discount: document.getElementById('cpf_discount').value.trim(),
             expiry: document.getElementById('cpf_expiry').value,
             limit_count: document.getElementById('cpf_limit').value ? document.getElementById('cpf_limit').value.trim() : 'Unlimited',
+            min_order_value: document.getElementById('cpf_min_order').value ? document.getElementById('cpf_min_order').value.trim() : null,
             status: 'Active'
         };
 
@@ -1390,6 +1422,30 @@ function setupFormHandlers() {
             e.target.reset();
         } else {
             alert('Failed to save user: ' + error.message);
+        }
+    });
+
+    // Edit Order Form
+    document.getElementById('editOrderForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('e_order_id').value;
+        const orderData = {
+            customer: document.getElementById('e_order_customer').value.trim(),
+            phone: document.getElementById('e_order_phone').value.trim(),
+            address: document.getElementById('e_order_address').value.trim(),
+            status: document.getElementById('e_order_status').value
+        };
+
+        const { error } = await db.from('orders').update(orderData).eq('id', id);
+
+        if (!error) {
+            orders = await fetchTable('orders');
+            renderOrders();
+            updateDashboardStats();
+            closeModal('orderEditModal');
+            e.target.reset();
+        } else {
+            alert('Failed to update order: ' + error.message);
         }
     });
 }
